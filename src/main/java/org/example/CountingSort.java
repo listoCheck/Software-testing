@@ -98,5 +98,8 @@ public class CountingSort {
         trace.add(CP.EXIT);
         return new TraceResult(output, Collections.unmodifiableList(trace));
     }
-}
 
+    public static int[] sort(int[] input) {
+        return sortWithTrace(input).sorted;
+    }
+}

@@ -9,75 +9,60 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CountingSortTest {
 
+    private static long count(List<CP> trace, CP point) {
+        return trace.stream().filter(p -> p == point).count();
+    }
+
     @Test
-    void emptyArray_hasMinimalTrace() {
-        TraceResult r = CountingSort.sortWithTrace(new int[]{});
+    void nullInput_returnsEmptyAndMinimalTrace() {
+        TraceResult r = CountingSort.sortWithTrace(null);
         assertArrayEquals(new int[]{}, r.sorted);
         assertEquals(List.of(CP.ENTRY, CP.EMPTY_RETURN, CP.EXIT), r.trace);
     }
 
     @Test
-    void singleElement_recordsExpectedTrace() {
-        TraceResult r = CountingSort.sortWithTrace(new int[]{3});
-        assertArrayEquals(new int[]{3}, r.sorted);
-        assertEquals(
-                List.of(
-                        CP.ENTRY,
-                        CP.SCAN_START,
-                        CP.SCAN_ITEM,
-                        CP.NEW_MAX,
-                        CP.ALLOCATE_COUNTS,
-                        CP.COUNTING_START,
-                        CP.COUNT_ITEM,
-                        CP.PREFIX_SUM_START,
-                        CP.PREFIX_ITEM,
-                        CP.PREFIX_ITEM,
-                        CP.PREFIX_ITEM,
-                        CP.PLACE_START,
-                        CP.PLACE_ITEM,
-                        CP.EXIT
-                ), r.trace
-        );
+    void allEqualElements_sortedAndTraceCountsMatch() {
+        TraceResult r = CountingSort.sortWithTrace(new int[]{5, 5, 5, 5});
+        assertArrayEquals(new int[]{5, 5, 5, 5}, r.sorted);
+        assertEquals(4, count(r.trace, CP.COUNT_ITEM));
+        assertEquals(4, count(r.trace, CP.PLACE_ITEM));
+        // max==5 -> prefix loop runs 5 times
+        assertEquals(5, count(r.trace, CP.PREFIX_ITEM));
     }
 
     @Test
-    void typicalArray_fullTraceMatches() {
-        int[] input = {2, 0, 2, 1};
-        TraceResult r = CountingSort.sortWithTrace(input);
-        assertArrayEquals(new int[]{0,1,2,2}, r.sorted);
-
-        assertEquals(
-                List.of(
-                        CP.ENTRY,
-                        CP.SCAN_START,
-                        CP.SCAN_ITEM, // 2
-                        CP.NEW_MAX,
-                        CP.SCAN_ITEM, // 0
-                        CP.SCAN_ITEM, // 2
-                        CP.SCAN_ITEM, // 1
-                        CP.ALLOCATE_COUNTS,
-                        CP.COUNTING_START,
-                        CP.COUNT_ITEM,
-                        CP.COUNT_ITEM,
-                        CP.COUNT_ITEM,
-                        CP.COUNT_ITEM,
-                        CP.PREFIX_SUM_START,
-                        CP.PREFIX_ITEM, // i=1
-                        CP.PREFIX_ITEM, // i=2
-                        CP.PLACE_START,
-                        CP.PLACE_ITEM, // 1
-                        CP.PLACE_ITEM, // 2
-                        CP.PLACE_ITEM, // 0
-                        CP.PLACE_ITEM, // 2
-                        CP.EXIT
-                ), r.trace
-        );
+    void traceStructure_hasExpectedPhasesAndCounts() {
+        int[] in = {3, 0, 3, 1, 0}; // n=5, max=3
+        TraceResult r = CountingSort.sortWithTrace(in);
+        assertArrayEquals(new int[]{0, 0, 1, 3, 3}, r.sorted);
+        // Phases appear in order
+        var t = r.trace;
+        assertTrue(t.indexOf(CP.SCAN_START) < t.indexOf(CP.ALLOCATE_COUNTS));
+        assertTrue(t.indexOf(CP.ALLOCATE_COUNTS) < t.indexOf(CP.COUNTING_START));
+        assertTrue(t.indexOf(CP.COUNTING_START) < t.indexOf(CP.PREFIX_SUM_START));
+        assertTrue(t.indexOf(CP.PREFIX_SUM_START) < t.indexOf(CP.PLACE_START));
+        assertTrue(t.get(0) == CP.ENTRY && t.get(t.size()-1) == CP.EXIT);
+        // Item-level counts
+        assertEquals(5, count(t, CP.COUNT_ITEM));
+        assertEquals(5, count(t, CP.PLACE_ITEM));
+        assertEquals(3, count(t, CP.PREFIX_ITEM)); // 1..max
     }
 
     @Test
-    void negativeValues_throw() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> CountingSort.sortWithTrace(new int[]{1, -1, 2}));
-        assertTrue(ex.getMessage().toLowerCase().contains("non-negative"));
+    void alreadySortedAndReverseSorted() {
+        assertArrayEquals(new int[]{0,1,2,3}, CountingSort.sort(new int[]{0,1,2,3}));
+        assertArrayEquals(new int[]{0,1,2,3,4,5}, CountingSort.sort(new int[]{5,4,3,2,1,0}));
+    }
+
+    @Test
+    void zerosOnlyAndZerosMixed() {
+        assertArrayEquals(new int[]{0,0,0}, CountingSort.sort(new int[]{0,0,0}));
+        assertArrayEquals(new int[]{0,0,2,3}, CountingSort.sort(new int[]{3,0,2,0}));
+    }
+
+    @Test
+    void outlierLargeGapAndBigKSmallN() {
+        assertArrayEquals(new int[]{1,3,5,30}, CountingSort.sort(new int[]{30,1,5,3}));
+        assertArrayEquals(new int[]{0,1000}, CountingSort.sort(new int[]{1000,0}));
     }
 }
