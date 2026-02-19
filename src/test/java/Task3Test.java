@@ -1,9 +1,9 @@
-import org.example.domain.*;
+import org.example.task3.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DomainModelTest {
+public class Task3Test {
 
     @Test
     void sceneReflectsNarrativeFacts() {

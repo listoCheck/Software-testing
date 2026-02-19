@@ -1,4 +1,4 @@
-package org.example.domain;
+package org.example.task3;
 
 public class SceneFactory {
     public static Scene createScene() {

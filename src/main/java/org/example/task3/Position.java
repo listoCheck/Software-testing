@@ -1,4 +1,4 @@
-package org.example.domain;
+package org.example.task3;
 
 public enum Position {
     GROUND,
