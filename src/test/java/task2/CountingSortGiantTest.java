@@ -1,4 +1,6 @@
-import org.example.CountingSort;
+package task2;
+
+import org.example.Task2;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -21,7 +23,7 @@ public class CountingSortGiantTest {
             freqIn[v]++;
         }
 
-        int[] out = CountingSort.sort(in);
+        int[] out = Task2.sort(in);
 
         // Nondecreasing order check (fail fast for clarity)
         for (int i = 1; i < out.length; i++) {

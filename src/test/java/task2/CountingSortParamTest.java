@@ -1,6 +1,8 @@
-import org.example.CountingSort;
-import org.example.CountingSort.CP;
-import org.example.CountingSort.TraceResult;
+package task2;
+
+import org.example.Task2;
+import org.example.Task2.CP;
+import org.example.Task2.TraceResult;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -33,13 +35,13 @@ public class CountingSortParamTest {
     @MethodSource("arrays")
     void resultMatchesJavaSort(int[] input) {
         int[] expected = Arrays.stream(input).sorted().toArray();
-        assertArrayEquals(expected, CountingSort.sort(Arrays.copyOf(input, input.length)));
+        assertArrayEquals(expected, Task2.sort(Arrays.copyOf(input, input.length)));
     }
 
     @ParameterizedTest
     @MethodSource("arrays")
     void traceHasCorrectItemCountsAndBoundaries(int[] input) {
-        TraceResult r = CountingSort.sortWithTrace(Arrays.copyOf(input, input.length));
+        TraceResult r = Task2.sortWithTrace(Arrays.copyOf(input, input.length));
         List<CP> t = r.trace;
         assertEquals(input.length, count(t, CP.COUNT_ITEM));
         assertEquals(input.length, count(t, CP.PLACE_ITEM));
@@ -52,7 +54,7 @@ public class CountingSortParamTest {
     void prefixItemsEqualMaxForMaxGreaterZero(int[] input) {
         int max = Arrays.stream(input).max().orElse(0);
         int expected = Math.max(0, max); // prefix loop runs for i=1..max
-        TraceResult r = CountingSort.sortWithTrace(Arrays.copyOf(input, input.length));
+        TraceResult r = Task2.sortWithTrace(Arrays.copyOf(input, input.length));
         assertEquals(expected, count(r.trace, CP.PREFIX_ITEM));
     }
 
@@ -64,7 +66,7 @@ public class CountingSortParamTest {
         for (int v : input) {
             if (v > cur) { expected++; cur = v; }
         }
-        TraceResult r = CountingSort.sortWithTrace(Arrays.copyOf(input, input.length));
+        TraceResult r = Task2.sortWithTrace(Arrays.copyOf(input, input.length));
         assertEquals(expected, count(r.trace, CP.NEW_MAX));
     }
 }

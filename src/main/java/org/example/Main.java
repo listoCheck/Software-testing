@@ -1,6 +1,6 @@
 package org.example;
 
-import static org.example.CountingSort.sortWithTrace;
+import static org.example.Task2.sortWithTrace;
 
 public class Main {
     public static void main(String[] args) {

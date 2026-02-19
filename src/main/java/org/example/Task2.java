@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CountingSort {
+public class Task2 {
 
-    private CountingSort() {}
+    private Task2() {}
 
     public enum CP {
         ENTRY,
