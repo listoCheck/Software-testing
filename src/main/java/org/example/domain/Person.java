@@ -1,23 +1,16 @@
 package org.example.domain;
 
-import java.util.Objects;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Person {
+    @NonNull
     private final String name;
-    private Position position;
-    private Mood mood;
-
-    public Person(String name) {
-        this.name = Objects.requireNonNull(name);
-        this.position = Position.GROUND;
-        this.mood = Mood.NEUTRAL;
-    }
-
-    public String getName() { return name; }
-    public Position getPosition() { return position; }
-    public Mood getMood() { return mood; }
-
-    public void setPosition(Position position) { this.position = position; }
-    public void setMood(Mood mood) { this.mood = mood; }
+    private Position position = Position.GROUND;
+    private Mood mood = Mood.NEUTRAL;
 }
-

@@ -1,5 +1,8 @@
 package org.example.domain;
 
+import lombok.Getter;
+
+@Getter
 public class Oration {
     private final Person speaker;
     private final Stage stage;
@@ -9,8 +12,4 @@ public class Oration {
         this.stage = stage;
         this.speaker.setPosition(Position.STAGE);
     }
-
-    public Person getSpeaker() { return speaker; }
-    public Stage getStage() { return stage; }
 }
-
