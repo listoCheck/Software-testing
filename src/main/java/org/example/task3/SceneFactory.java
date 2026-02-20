@@ -8,7 +8,7 @@ public class SceneFactory {
 
         Building building = new Building(3);
         Window window = new Window(2);
-        Stage stage = new Stage(true);
+        Stage stage = new Stage(true, window);
 
         Person orator = new Person("Orator");
         Oration oration = new Oration(orator, stage);
@@ -19,4 +19,3 @@ public class SceneFactory {
         return new Scene(crowd, building, window, stage, oration, arthur);
     }
 }
-

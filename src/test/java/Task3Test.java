@@ -21,6 +21,30 @@ public class Task3Test {
     }
 
     @Test
+    void platformIsAtTheWindow() {
+        Scene s = SceneFactory.createScene();
+        assertNotNull(s.getStage());
+        assertNotNull(s.getWindow());
+        assertSame(s.getWindow(), s.getStage().getWindow(), "Stage/platform must be located at the window");
+    }
+
+    @Test
+    void oratorAddressesPeopleFromPlatform() {
+        Scene s = SceneFactory.createScene();
+        assertSame(s.getStage(), s.getOration().getStage(), "Oration must use the platform");
+        assertEquals(Position.STAGE, s.getOration().getSpeaker().getPosition());
+    }
+
+    @Test
+    void arthurAtWindowAfterCrowdCheered_conditionHolds() {
+        Scene s = SceneFactory.createScene();
+        assertTrue(s.getCrowd().getPeople().stream().allMatch(p -> p.getMood() == Mood.CHEERING),
+                "Crowd should be cheering");
+        assertEquals(Position.WINDOW_SECOND_FLOOR, s.getArthur().getPosition(),
+                "Arthur should end up at the second-floor window");
+    }
+
+    @Test
     void motionUpdatesPositionsConsistently() {
         Person p = new Person("Test");
         Window w = new Window(2);
@@ -74,4 +98,3 @@ public class Task3Test {
         assertEquals(2, s.getWindow().getFloor());
     }
 }
-
