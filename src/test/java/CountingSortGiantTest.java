@@ -23,14 +23,12 @@ public class CountingSortGiantTest {
 
         int[] out = CountingSort.sort(in);
 
-        // Nondecreasing order check (fail fast for clarity)
         for (int i = 1; i < out.length; i++) {
             if (out[i - 1] > out[i]) {
                 fail("Array is not sorted at index " + i + ": " + out[i - 1] + ">" + out[i]);
             }
         }
 
-        // Frequency preservation
         int[] freqOut = new int[K + 1];
         for (int v : out) {
             assertTrue(v >= 0 && v <= K, "Value out of expected range: " + v);

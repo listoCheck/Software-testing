@@ -51,7 +51,7 @@ public class CountingSortParamTest {
     @MethodSource("arrays")
     void prefixItemsEqualMaxForMaxGreaterZero(int[] input) {
         int max = Arrays.stream(input).max().orElse(0);
-        int expected = Math.max(0, max); // prefix loop runs for i=1..max
+        int expected = Math.max(0, max);
         TraceResult r = CountingSort.sortWithTrace(Arrays.copyOf(input, input.length));
         assertEquals(expected, count(r.trace, CP.PREFIX_ITEM));
     }
