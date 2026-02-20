@@ -1,13 +1,13 @@
 package org.example.task3;
 
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Stage {
     private Boolean mic;
-    public Stage() {
-        this.mic = true;
-    }
-    public Stage(Boolean mic) {
-        this.mic = mic;
-    }
-    public Boolean getMic() { return mic; }
-    public void setMic(Boolean mic) { this.mic = mic; }
+    private Window window;
 }
+
