@@ -1,0 +1,52 @@
+@startuml
+package "org.example.math" {
+  interface MathFunction {
+    +value(x: double): double
+  }
+
+  class SeriesSin
+  class SeriesLn
+  class Cos
+  class Tan
+  class Cot
+  class Sec
+  class Csc
+  class Logarithm
+  class TrigSystem
+  class LogSystem
+  class SystemFunction
+
+  MathFunction <|.. SeriesSin
+  MathFunction <|.. SeriesLn
+  MathFunction <|.. Cos
+  MathFunction <|.. Tan
+  MathFunction <|.. Cot
+  MathFunction <|.. Sec
+  MathFunction <|.. Csc
+  MathFunction <|.. Logarithm
+  MathFunction <|.. TrigSystem
+  MathFunction <|.. LogSystem
+  MathFunction <|.. SystemFunction
+
+  Cos --> MathFunction : sin
+  Tan --> MathFunction : sin, cos
+  Cot --> MathFunction : sin, cos
+  Sec --> MathFunction : cos
+  Csc --> MathFunction : sin
+  Logarithm --> MathFunction : ln
+  TrigSystem --> MathFunction : sec, cos, csc, tan, cot
+  LogSystem --> MathFunction : log3, log10
+  SystemFunction --> MathFunction : trig, log
+}
+
+package "org.example.io" {
+  class CsvExporter
+}
+
+package "org.example.app" {
+  class FunctionFactory
+}
+
+CsvExporter --> MathFunction
+FunctionFactory --> MathFunction
+@enduml
