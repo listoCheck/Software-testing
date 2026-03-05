@@ -14,6 +14,10 @@ public class CsvExporter {
             throw new IllegalArgumentException("step must be > 0");
         }
         try (BufferedWriter writer = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
+            writer.write("X");
+            writer.write(separator);
+            writer.write("Result(X)");
+            writer.newLine();
             double x = from;
             if (from > to) {
                 for (; x >= to; x -= step) {
