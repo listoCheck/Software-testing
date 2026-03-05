@@ -17,7 +17,10 @@ public class IntegrationLogSystemTest {
         MathFunction log10 = new StubFunction(Map.of(2.0, 3.0), 1e-9);
         LogSystem logSystem = new LogSystem(log3, log10, 1e-9);
 
-        double expected = Math.pow(Math.pow((2.0 - 2.0 + 2.0 * 3.0), 2.0) / 3.0, 2.0);
+        double a = (2.0 - 2.0) + (2.0 * 3.0);
+        double b = a * a;
+        double c = b / 3.0;
+        double expected = c * c;
         assertEquals(expected, logSystem.value(2.0), 1e-9);
     }
 
