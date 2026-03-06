@@ -22,10 +22,16 @@ public class IntegrationLogSystemAdditionalTest {
     @Tag("integration")
     @ParameterizedTest
     @CsvSource({
+            "0.2",
+            "0.5",
+            "1.5",
             "2.0",
+            "2.5",
             "3.0",
             "5.0",
-            "10.0"
+            "7.0",
+            "10.0",
+            "20.0"
     })
     void logSystemMatchesMathLogForTypicalX(double x) {
         double eps = 1e-10;

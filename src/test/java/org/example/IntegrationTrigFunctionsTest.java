@@ -14,8 +14,13 @@ public class IntegrationTrigFunctionsTest {
 
     @ParameterizedTest
     @CsvSource({
+            "-2.3",
+            "-2.0",
+            "-1.3",
             "-1.0",
+            "-0.8",
             "-0.7",
+            "-0.5",
             "-0.3"
     })
     void sinSeriesMatchesMathSin(double x) {
@@ -25,8 +30,13 @@ public class IntegrationTrigFunctionsTest {
 
     @ParameterizedTest
     @CsvSource({
+            "-2.3",
+            "-2.0",
+            "-1.3",
             "-1.0",
+            "-0.8",
             "-0.7",
+            "-0.5",
             "-0.3"
     })
     void cosMatchesMathCos(double x) {
@@ -37,8 +47,13 @@ public class IntegrationTrigFunctionsTest {
 
     @ParameterizedTest
     @CsvSource({
+            "-2.3",
+            "-2.0",
+            "-1.3",
             "-1.0",
+            "-0.8",
             "-0.7",
+            "-0.5",
             "-0.3"
     })
     void tanMatchesMathTan(double x) {
@@ -50,8 +65,13 @@ public class IntegrationTrigFunctionsTest {
 
     @ParameterizedTest
     @CsvSource({
+            "-2.3",
+            "-2.0",
+            "-1.3",
             "-1.0",
+            "-0.8",
             "-0.7",
+            "-0.5",
             "-0.3"
     })
     void secMatchesMathSec(double x) {
@@ -63,8 +83,13 @@ public class IntegrationTrigFunctionsTest {
 
     @ParameterizedTest
     @CsvSource({
+            "-2.3",
+            "-2.0",
+            "-1.3",
             "-1.0",
+            "-0.8",
             "-0.7",
+            "-0.5",
             "-0.3"
     })
     void cscMatchesMathCsc(double x) {
@@ -75,8 +100,13 @@ public class IntegrationTrigFunctionsTest {
 
     @ParameterizedTest
     @CsvSource({
+            "-2.3",
+            "-2.0",
+            "-1.3",
             "-1.0",
+            "-0.8",
             "-0.7",
+            "-0.5",
             "-0.3"
     })
     void cotMatchesMathCot(double x) {
