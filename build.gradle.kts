@@ -28,16 +28,53 @@ tasks.test {
     }
 }
 
-tasks.register<Test>("integrationTest") {
-    description = "Runs tests tagged with 'integration'."
+fun registerIntegrationStageTask(
+    taskName: String,
+    taskDescription: String,
+    includePattern: String
+) = tasks.register<Test>(taskName) {
+    description = taskDescription
     group = "verification"
     dependsOn(tasks.testClasses)
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath
+    include(includePattern)
     useJUnitPlatform {
         includeTags("integration")
     }
     shouldRunAfter(tasks.test)
+}
+
+val integrationMocksTest = registerIntegrationStageTask(
+    taskName = "integrationMocksTest",
+    taskDescription = "Runs stage 1 integration tests (mocks).",
+    includePattern = "**/org/example/integration/mocks/**"
+)
+
+val integrationRealValuesTest = registerIntegrationStageTask(
+    taskName = "integrationRealValuesTest",
+    taskDescription = "Runs stage 2 integration tests (real values).",
+    includePattern = "**/org/example/integration/realvalues/**"
+)
+
+val integrationSystemTest = registerIntegrationStageTask(
+    taskName = "integrationSystemTest",
+    taskDescription = "Runs stage 3 integration tests (full system).",
+    includePattern = "**/org/example/integration/system/**"
+)
+
+integrationRealValuesTest.configure {
+    shouldRunAfter(integrationMocksTest)
+}
+
+integrationSystemTest.configure {
+    shouldRunAfter(integrationRealValuesTest)
+}
+
+tasks.register("integrationTest") {
+    description = "Runs integration pipeline: mocks -> real values -> system."
+    group = "verification"
+    dependsOn(integrationMocksTest, integrationRealValuesTest, integrationSystemTest)
 }
 
 application {

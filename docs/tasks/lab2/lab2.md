@@ -31,11 +31,13 @@ x > 0 :
 - Логарифмическая ветка системы: `x > 0` и `log_10(x) != 0` (то есть `x != 1`).
 
 ## Стратегия интеграции
-Стратегия — снизу вверх с контролем через табличные заглушки:
-1. Сборка `SystemFunction` с заглушками `TrigSystem` и `LogSystem` (проверка маршрутизации по `x`).
-2. Интеграция `LogSystem` с заглушками `log3`, `log10`.
-3. Замена заглушек на реальные `log3`, `log10`, построенные через `ln` (с `SeriesLn`).
-4. Интеграция тригонометрических модулей через `SeriesSin` и производные функции.
+Стратегия — снизу вверх (Bottom-Up) в 4 этапа:
+1. Листовые функции с моками зависимостей (`Cos`, `Tan`, `Cot`, `Sec`, `Csc`, `Logarithm`).
+2. Подсистемы с моками (`LogSystem`, `TrigSystem`).
+3. Маршрутизация `SystemFunction` с моками (`x <= 0` -> trig, `x > 0` -> log).
+4. Замена моков на реальные модули (`SeriesSin`, `SeriesLn`) и проверка полной интеграции.
+
+Подробный план и критерии готовности: `docs/tasks/lab2/integration-strategy.md`.
 
 ## Описание тестового покрытия
 Классы эквивалентности:
@@ -48,6 +50,9 @@ x > 0 :
 - `IntegrationLogSystemTest` — интеграция `LogSystem` с заглушками и проверка деления на `log10(x)`.
 - `IntegrationTrigSystemTest` — проверка корректной обработки деления на ноль в триг-ветке.
 - `AccuracyTest` — сравнение с `java.lang.Math` для `sin`, `ln`, `LogSystem`.
+- `IntegrationLeafFunctionsWithMocksTest` — интеграция листовых модулей через моки зависимостей.
+- `IntegrationSubsystemsWithMocksTest` — интеграция `LogSystem` и `TrigSystem` через моки.
+- `IntegrationSystemRoutingWithMocksTest` — выбор ветки в `SystemFunction` через моки.
 
 ## Графики по CSV-выгрузкам
 Формирование CSV: `Main` + `CsvExporter`.

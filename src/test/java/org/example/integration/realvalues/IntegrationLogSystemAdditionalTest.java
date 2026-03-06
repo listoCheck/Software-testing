@@ -1,4 +1,4 @@
-package org.example;
+package org.example.integration.realvalues;
 
 import org.example.math.LogSystem;
 import org.example.math.Logarithm;

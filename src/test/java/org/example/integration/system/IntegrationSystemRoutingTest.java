@@ -1,4 +1,4 @@
-package org.example;
+package org.example.integration.system;
 
 import org.example.math.*;
 import org.junit.jupiter.api.Tag;

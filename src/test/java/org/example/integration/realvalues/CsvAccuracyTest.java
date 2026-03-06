@@ -1,11 +1,13 @@
-package org.example;
+package org.example.integration.realvalues;
 
 import org.example.math.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("integration")
 public class CsvAccuracyTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/sin_reference.csv", numLinesToSkip = 1)
