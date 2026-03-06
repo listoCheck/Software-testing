@@ -1,30 +1,64 @@
 package org.example;
 
-import org.example.math.MathFunction;
-import org.example.math.SystemFunction;
-import org.example.stub.StubFunction;
+import org.example.math.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegrationSystemRoutingTest {
+    @Tag("integration")
     @Test
     void routesToTrigWhenXLeqZero() {
-        MathFunction trigStub = new StubFunction(Map.of(-1.0, 42.0), 1e-9);
-        MathFunction logStub = new StubFunction(Map.of(1.0, 7.0), 1e-9);
-        SystemFunction system = new SystemFunction(trigStub, logStub);
+        double eps = 1e-10;
+        SeriesSin sin = new SeriesSin(eps);
+        Cos cos = new Cos(sin);
+        TrigSystem trigSystem = new TrigSystem(
+                new Sec(cos, eps),
+                cos,
+                new Csc(sin, eps),
+                new Tan(sin, cos, eps),
+                new Cot(sin, cos, eps),
+                eps
+        );
 
-        assertEquals(42.0, system.value(-1.0), 1e-9);
+        SeriesLn ln = new SeriesLn(eps);
+        Logarithm log3 = new Logarithm(ln, 3.0);
+        Logarithm log10 = new Logarithm(ln, 10.0);
+        LogSystem logSystem = new LogSystem(log3, log10, eps);
+
+        SystemFunction system = new SystemFunction(trigSystem, logSystem);
+
+        assertThrows(ArithmeticException.class, () -> system.value(-1.0));
     }
 
+    @Tag("integration")
     @Test
     void routesToLogWhenXGreaterZero() {
-        MathFunction trigStub = new StubFunction(Map.of(-1.0, 42.0), 1e-9);
-        MathFunction logStub = new StubFunction(Map.of(2.0, 7.0), 1e-9);
-        SystemFunction system = new SystemFunction(trigStub, logStub);
+        double eps = 1e-10;
+        SeriesSin sin = new SeriesSin(eps);
+        Cos cos = new Cos(sin);
+        TrigSystem trigSystem = new TrigSystem(
+                new Sec(cos, eps),
+                cos,
+                new Csc(sin, eps),
+                new Tan(sin, cos, eps),
+                new Cot(sin, cos, eps),
+                eps
+        );
 
-        assertEquals(7.0, system.value(2.0), 1e-9);
+        SeriesLn ln = new SeriesLn(eps);
+        Logarithm log3 = new Logarithm(ln, 3.0);
+        Logarithm log10 = new Logarithm(ln, 10.0);
+        LogSystem logSystem = new LogSystem(log3, log10, eps);
+
+        SystemFunction system = new SystemFunction(trigSystem, logSystem);
+
+        double x = 2.0;
+        double log3Val = Math.log(x) / Math.log(3.0);
+        double log10Val = Math.log(x) / Math.log(10.0);
+        double expected = Math.pow(Math.pow(log3Val * log10Val, 2.0) / log10Val, 2.0);
+        assertEquals(expected, system.value(x), 1e-6);
     }
 }

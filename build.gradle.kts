@@ -22,7 +22,22 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
+    // Run only unit tests by default (exclude integration-tagged tests).
+    useJUnitPlatform {
+        excludeTags("integration")
+    }
+}
+
+tasks.register<Test>("integrationTest") {
+    description = "Runs tests tagged with 'integration'."
+    group = "verification"
+    dependsOn(tasks.testClasses)
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform {
+        includeTags("integration")
+    }
+    shouldRunAfter(tasks.test)
 }
 
 application {

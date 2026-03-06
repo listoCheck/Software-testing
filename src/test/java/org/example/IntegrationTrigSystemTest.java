@@ -1,25 +1,29 @@
 package org.example;
 
-import org.example.math.MathFunction;
-import org.example.math.TrigSystem;
-import org.example.stub.StubFunction;
+import org.example.math.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegrationTrigSystemTest {
+    @Tag("integration")
     @Test
     void trigSystemAlwaysDivisionByZeroBecauseCosMinusCos() {
-        MathFunction sec = new StubFunction(Map.of(-1.0, 2.0), 1e-9);
-        MathFunction cos = new StubFunction(Map.of(-1.0, 3.0), 1e-9);
-        MathFunction csc = new StubFunction(Map.of(-1.0, 4.0), 1e-9);
-        MathFunction tan = new StubFunction(Map.of(-1.0, 5.0), 1e-9);
-        MathFunction cot = new StubFunction(Map.of(-1.0, 6.0), 1e-9);
+        double eps = 1e-10;
+        SeriesSin sin = new SeriesSin(eps);
+        Cos cos = new Cos(sin);
+        TrigSystem trigSystem = new TrigSystem(
+                new Sec(cos, eps),
+                cos,
+                new Csc(sin, eps),
+                new Tan(sin, cos, eps),
+                new Cot(sin, cos, eps),
+                eps
+        );
 
-        TrigSystem trigSystem = new TrigSystem(sec, cos, csc, tan, cot, 1e-9);
-
-        assertThrows(ArithmeticException.class, () -> trigSystem.value(-1.0));
+        ArithmeticException ex = assertThrows(ArithmeticException.class, () -> trigSystem.value(-1.0));
+        assertEquals("division by zero in trig denominator", ex.getMessage());
     }
 }
