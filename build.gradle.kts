@@ -47,34 +47,34 @@ fun registerIntegrationStageTask(
 
 val integrationMocksTest = registerIntegrationStageTask(
     taskName = "integrationMocksTest",
-    taskDescription = "Runs stage 1 integration tests (mocks).",
+    taskDescription = "Runs stage 1 integration tests (isolated modules on mocks).",
     includePattern = "**/org/example/integration/mocks/**"
+)
+
+val integrationProgressiveTest = registerIntegrationStageTask(
+    taskName = "integrationProgressiveTest",
+    taskDescription = "Runs stage 2 integration tests (gradual replacement of mocks with real dependencies).",
+    includePattern = "**/org/example/integration/progressive/**"
 )
 
 val integrationRealValuesTest = registerIntegrationStageTask(
     taskName = "integrationRealValuesTest",
-    taskDescription = "Runs stage 2 integration tests (real values).",
+    taskDescription = "Runs stage 3 integration tests (fully integrated real values).",
     includePattern = "**/org/example/integration/realvalues/**"
 )
 
-val integrationSystemTest = registerIntegrationStageTask(
-    taskName = "integrationSystemTest",
-    taskDescription = "Runs stage 3 integration tests (full system).",
-    includePattern = "**/org/example/integration/system/**"
-)
-
-integrationRealValuesTest.configure {
+integrationProgressiveTest.configure {
     shouldRunAfter(integrationMocksTest)
 }
 
-integrationSystemTest.configure {
-    shouldRunAfter(integrationRealValuesTest)
+integrationRealValuesTest.configure {
+    shouldRunAfter(integrationProgressiveTest)
 }
 
 tasks.register("integrationTest") {
-    description = "Runs integration pipeline: mocks -> real values -> system."
+    description = "Runs integration pipeline: mocks -> progressive replacement -> real values."
     group = "verification"
-    dependsOn(integrationMocksTest, integrationRealValuesTest, integrationSystemTest)
+    dependsOn(integrationMocksTest, integrationProgressiveTest, integrationRealValuesTest)
 }
 
 application {
