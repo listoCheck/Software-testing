@@ -53,6 +53,9 @@ x > 0 :
 - `IntegrationLeafFunctionsWithMocksTest` — интеграция листовых модулей через моки зависимостей.
 - `IntegrationSubsystemsWithMocksTest` — интеграция `LogSystem` и `TrigSystem` через моки.
 - `IntegrationSystemRoutingWithMocksTest` — выбор ветки в `SystemFunction` через моки.
+- `IntegrationSystemExecutionWithMocksTest` — прогон `SystemFunction` на контролируемых мок-значениях.
+- `CsvAccuracyTest#systemMatchesReferenceForPositiveX` — прогон полной системы на реальных зависимостях по CSV-эталону.
+- `IntegrationSystemABTest` — A/B-сравнение «референс на Math» vs «реальная система на рядах».
 
 ## Графики по CSV-выгрузкам
 Формирование CSV: `Main` + `CsvExporter`.

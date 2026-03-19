@@ -35,11 +35,25 @@
 - логарифмическая цепочка `ln -> log3/log10 -> LogSystem`;
 - полная система `TrigSystem + LogSystem -> SystemFunction`.
 
+5. A/B сравнение.
+Сравниваем:
+- A: эталонную систему на функциях из `java.lang.Math` (в роли моков/референса);
+- B: реальную систему на `SeriesSin` + `SeriesLn`.
+
+Сценарии:
+- `x > 0`: проверяем численное совпадение в допуске;
+- `x <= 0`: проверяем одинаковое поведение по исключениям.
+
 ## Что было доделано
 Добавлены отдельные интеграционные тесты для этапов 1-3:
 - `IntegrationLeafFunctionsWithMocksTest`
 - `IntegrationSubsystemsWithMocksTest`
 - `IntegrationSystemRoutingWithMocksTest`
+
+Добавлены системные тесты выполнения и A/B:
+- `IntegrationSystemExecutionWithMocksTest`
+- `CsvAccuracyTest#systemMatchesReferenceForPositiveX`
+- `IntegrationSystemABTest`
 
 Существующие тесты этапа 4 сохранены и продолжают проверять работу на реальных значениях.
 

@@ -4,15 +4,13 @@ import org.example.math.Cos;
 import org.example.math.Cot;
 import org.example.math.Csc;
 import org.example.math.Logarithm;
-import org.example.math.MathFunction;
 import org.example.math.Sec;
 import org.example.math.Tan;
+import org.example.integration.support.RecordingFunction;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.DoubleUnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -94,28 +92,5 @@ public class IntegrationLeafFunctionsWithMocksTest {
 
         assertEquals(6.0 / 4.0, log3.value(5.0), 1e-12);
         assertEquals(List.of(3.0, 5.0), ln.calls());
-    }
-
-    private static final class RecordingFunction implements MathFunction {
-        private final DoubleUnaryOperator delegate;
-        private final List<Double> calls = new ArrayList<>();
-
-        private RecordingFunction(DoubleUnaryOperator delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public double value(double x) {
-            calls.add(x);
-            return delegate.applyAsDouble(x);
-        }
-
-        private int callCount() {
-            return calls.size();
-        }
-
-        private List<Double> calls() {
-            return calls;
-        }
     }
 }

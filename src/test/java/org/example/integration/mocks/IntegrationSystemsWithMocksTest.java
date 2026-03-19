@@ -1,20 +1,18 @@
 package org.example.integration.mocks;
 
 import org.example.math.LogSystem;
-import org.example.math.MathFunction;
 import org.example.math.TrigSystem;
+import org.example.integration.support.RecordingFunction;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.DoubleUnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Tag("integration")
-public class IntegrationSubsystemsWithMocksTest {
+public class IntegrationSystemsWithMocksTest {
     private static final double EPS = 1e-10;
 
     @Test
@@ -78,28 +76,5 @@ public class IntegrationSubsystemsWithMocksTest {
         assertEquals(1, csc.callCount());
         assertEquals(1, tan.callCount());
         assertEquals(1, cot.callCount());
-    }
-
-    private static final class RecordingFunction implements MathFunction {
-        private final DoubleUnaryOperator delegate;
-        private final List<Double> calls = new ArrayList<>();
-
-        private RecordingFunction(DoubleUnaryOperator delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public double value(double x) {
-            calls.add(x);
-            return delegate.applyAsDouble(x);
-        }
-
-        private int callCount() {
-            return calls.size();
-        }
-
-        private List<Double> calls() {
-            return calls;
-        }
     }
 }

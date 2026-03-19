@@ -1,13 +1,11 @@
 package org.example.integration.mocks;
 
-import org.example.math.MathFunction;
 import org.example.math.SystemFunction;
+import org.example.integration.support.RecordingFunction;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.DoubleUnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -44,28 +42,5 @@ public class IntegrationSystemRoutingWithMocksTest {
         assertEquals(200.0, system.value(2.0), 1e-12);
         assertEquals(0, trig.callCount());
         assertEquals(List.of(2.0), log.calls());
-    }
-
-    private static final class RecordingFunction implements MathFunction {
-        private final DoubleUnaryOperator delegate;
-        private final List<Double> calls = new ArrayList<>();
-
-        private RecordingFunction(DoubleUnaryOperator delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public double value(double x) {
-            calls.add(x);
-            return delegate.applyAsDouble(x);
-        }
-
-        private int callCount() {
-            return calls.size();
-        }
-
-        private List<Double> calls() {
-            return calls;
-        }
     }
 }

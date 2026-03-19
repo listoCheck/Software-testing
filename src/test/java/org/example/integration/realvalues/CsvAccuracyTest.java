@@ -13,7 +13,9 @@ public class CsvAccuracyTest {
     @CsvFileSource(resources = "/sin_reference.csv", numLinesToSkip = 1)
     void sinSeriesMatchesReference(double x, double expected) {
         SeriesSin sin = new SeriesSin(1e-12);
-        assertEquals(expected, sin.value(x), 1e-9);
+        assertEquals(expected
+
+                , sin.value(x), 1e-9);
     }
 
     @ParameterizedTest
@@ -48,5 +50,29 @@ public class CsvAccuracyTest {
         Logarithm log10 = new Logarithm(ln, 10.0);
         LogSystem logSystem = new LogSystem(log3, log10, eps);
         assertEquals(expected, logSystem.value(x), 1e-6);
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/logsystem_reference.csv", numLinesToSkip = 1)
+    void systemMatchesReferenceForPositiveX(double x, double expected) {
+        double eps = 1e-10;
+        SeriesSin sin = new SeriesSin(eps);
+        Cos cos = new Cos(sin);
+        TrigSystem trigSystem = new TrigSystem(
+                new Sec(cos, eps),
+                cos,
+                new Csc(sin, eps),
+                new Tan(sin, cos, eps),
+                new Cot(sin, cos, eps),
+                eps
+        );
+
+        SeriesLn ln = new SeriesLn(eps);
+        Logarithm log3 = new Logarithm(ln, 3.0);
+        Logarithm log10 = new Logarithm(ln, 10.0);
+        LogSystem logSystem = new LogSystem(log3, log10, eps);
+        SystemFunction system = new SystemFunction(trigSystem, logSystem);
+
+        assertEquals(expected, system.value(x), 1e-6);
     }
 }
