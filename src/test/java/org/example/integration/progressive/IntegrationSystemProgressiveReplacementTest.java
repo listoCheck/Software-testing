@@ -1,11 +1,11 @@
 package org.example.integration.progressive;
 
-import org.example.integration.support.RecordingFunction;
 import org.example.math.Cos;
 import org.example.math.Cot;
 import org.example.math.Csc;
 import org.example.math.LogSystem;
 import org.example.math.Logarithm;
+import org.example.math.MathFunction;
 import org.example.math.Sec;
 import org.example.math.SeriesLn;
 import org.example.math.SeriesSin;
@@ -17,6 +17,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @Tag("integration")
 public class IntegrationSystemProgressiveReplacementTest {
@@ -25,9 +30,8 @@ public class IntegrationSystemProgressiveReplacementTest {
 
     @Test
     void systemCanSwitchPositiveBranchToRealLogSubsystemWhileTrigIsStillMocked() {
-        RecordingFunction trig = new RecordingFunction(x -> {
-            throw new AssertionError("trig branch must stay isolated for x > 0");
-        });
+        MathFunction trig = mock(MathFunction.class);
+        when(trig.value(2.0)).thenThrow(new AssertionError("trig branch must stay isolated for x > 0"));
 
         SeriesLn ln = new SeriesLn(EPS);
         Logarithm log3 = new Logarithm(ln, 3.0);
@@ -41,7 +45,8 @@ public class IntegrationSystemProgressiveReplacementTest {
         double expected = Math.pow(Math.pow(log3Val * log10Val, 2.0) / log10Val, 2.0);
 
         assertEquals(expected, system.value(x), ASSERT_EPS);
-        assertEquals(0, trig.callCount());
+        verify(trig, never()).value(x);
+        verifyNoMoreInteractions(trig);
     }
 
     @Test
@@ -56,15 +61,15 @@ public class IntegrationSystemProgressiveReplacementTest {
                 new Cot(sin, cos, EPS),
                 EPS
         );
-        RecordingFunction log = new RecordingFunction(x -> {
-            throw new AssertionError("log branch must stay isolated for x <= 0");
-        });
+        MathFunction log = mock(MathFunction.class);
+        when(log.value(-1.0)).thenThrow(new AssertionError("log branch must stay isolated for x <= 0"));
 
         SystemFunction system = new SystemFunction(trigSystem, log);
 
         ArithmeticException ex = assertThrows(ArithmeticException.class, () -> system.value(-1.0));
         assertEquals("division by zero in trig denominator", ex.getMessage());
-        assertEquals(0, log.callCount());
+        verify(log, never()).value(-1.0);
+        verifyNoMoreInteractions(log);
     }
 
     @Test

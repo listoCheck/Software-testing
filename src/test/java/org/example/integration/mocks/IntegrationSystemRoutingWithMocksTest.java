@@ -1,46 +1,58 @@
 package org.example.integration.mocks;
 
+import org.example.math.MathFunction;
 import org.example.math.SystemFunction;
-import org.example.integration.support.RecordingFunction;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @Tag("integration")
 public class IntegrationSystemRoutingWithMocksTest {
     @Test
     void routesToTrigForNegativeX() {
-        RecordingFunction trig = new RecordingFunction(x -> -100.0);
-        RecordingFunction log = new RecordingFunction(x -> 200.0);
+        MathFunction trig = mock(MathFunction.class);
+        MathFunction log = mock(MathFunction.class);
+        when(trig.value(-1.0)).thenReturn(-100.0);
+
         SystemFunction system = new SystemFunction(trig, log);
 
         assertEquals(-100.0, system.value(-1.0), 1e-12);
-        assertEquals(List.of(-1.0), trig.calls());
-        assertEquals(0, log.callCount());
+        verify(trig).value(-1.0);
+        verify(log, never()).value(-1.0);
+        verifyNoMoreInteractions(trig, log);
     }
 
     @Test
     void routesToTrigAtBoundaryXZero() {
-        RecordingFunction trig = new RecordingFunction(x -> -50.0);
-        RecordingFunction log = new RecordingFunction(x -> 50.0);
+        MathFunction trig = mock(MathFunction.class);
+        MathFunction log = mock(MathFunction.class);
+        when(trig.value(0.0)).thenReturn(-50.0);
+
         SystemFunction system = new SystemFunction(trig, log);
 
         assertEquals(-50.0, system.value(0.0), 1e-12);
-        assertEquals(List.of(0.0), trig.calls());
-        assertEquals(0, log.callCount());
+        verify(trig).value(0.0);
+        verify(log, never()).value(0.0);
+        verifyNoMoreInteractions(trig, log);
     }
 
     @Test
     void routesToLogForPositiveX() {
-        RecordingFunction trig = new RecordingFunction(x -> -100.0);
-        RecordingFunction log = new RecordingFunction(x -> 200.0);
+        MathFunction trig = mock(MathFunction.class);
+        MathFunction log = mock(MathFunction.class);
+        when(log.value(2.0)).thenReturn(200.0);
+
         SystemFunction system = new SystemFunction(trig, log);
 
         assertEquals(200.0, system.value(2.0), 1e-12);
-        assertEquals(0, trig.callCount());
-        assertEquals(List.of(2.0), log.calls());
+        verify(trig, never()).value(2.0);
+        verify(log).value(2.0);
+        verifyNoMoreInteractions(trig, log);
     }
 }
