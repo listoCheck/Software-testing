@@ -1,0 +1,128 @@
+{
+  "id": "0ccf2bcb-4f40-4f29-9b64-2d7bff4cb35e",
+  "version": "2.0",
+  "name": "tutu-lab3",
+  "url": "https://www.tutu.ru/",
+  "tests": [
+    {
+      "id": "test-home-services",
+      "name": "TC-01 Home Services",
+      "commands": [
+        {
+          "id": "cmd-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "cmd-02",
+          "command": "waitForElementVisible",
+          "target": "xpath=//*[normalize-space()='Идеи для поездок']",
+          "value": ""
+        },
+        {
+          "id": "cmd-03",
+          "command": "assertElementPresent",
+          "target": "xpath=//*[normalize-space()='Авиабилеты']",
+          "value": ""
+        },
+        {
+          "id": "cmd-04",
+          "command": "assertElementPresent",
+          "target": "xpath=//*[normalize-space()='Ж/д билеты']",
+          "value": ""
+        },
+        {
+          "id": "cmd-05",
+          "command": "assertElementPresent",
+          "target": "xpath=//*[normalize-space()='Автобусы']",
+          "value": ""
+        },
+        {
+          "id": "cmd-06",
+          "command": "assertElementPresent",
+          "target": "xpath=//*[normalize-space()='Отели']",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-help",
+      "name": "TC-02 Help Navigation",
+      "commands": [
+        {
+          "id": "cmd-07",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "cmd-08",
+          "command": "click",
+          "target": "xpath=(//a[normalize-space()='Справочная'])[1]",
+          "value": ""
+        },
+        {
+          "id": "cmd-09",
+          "command": "waitForLocation",
+          "target": "**/2read/**",
+          "value": ""
+        },
+        {
+          "id": "cmd-10",
+          "command": "assertElementPresent",
+          "target": "xpath=//*[self::h1 or self::h2][normalize-space()='Справочная']",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "test-invalid-email",
+      "name": "TC-03 Invalid Email",
+      "commands": [
+        {
+          "id": "cmd-11",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "cmd-12",
+          "command": "type",
+          "target": "xpath=//input[@type='email']",
+          "value": "invalid-email"
+        },
+        {
+          "id": "cmd-13",
+          "command": "click",
+          "target": "xpath=//button[normalize-space()='Подписаться']",
+          "value": ""
+        },
+        {
+          "id": "cmd-14",
+          "command": "assertEditable",
+          "target": "xpath=//input[@type='email']",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "suite-1",
+      "name": "Default Suite",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 30000,
+      "tests": [
+        "test-home-services",
+        "test-help",
+        "test-invalid-email"
+      ]
+    }
+  ],
+  "urls": [
+    "https://www.tutu.ru/"
+  ],
+  "plugins": []
+}
