@@ -20,12 +20,14 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-core:5.12.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.seleniumhq.selenium:selenium-java:4.30.0")
 }
 
 tasks.test {
-    // Run only unit tests by default (exclude integration-tagged tests).
+    // Run only unit tests by default (exclude integration and UI-tagged tests).
     useJUnitPlatform {
         excludeTags("integration")
+        excludeTags("ui")
     }
 }
 
@@ -76,6 +78,28 @@ tasks.register("integrationTest") {
     description = "Runs integration pipeline: mocks -> progressive replacement -> real values."
     group = "verification"
     dependsOn(integrationMocksTest, integrationProgressiveTest, integrationRealValuesTest)
+}
+
+fun registerUiTask(taskName: String, browserName: String) = tasks.register<Test>(taskName) {
+    description = "Runs UI tests in $browserName."
+    group = "verification"
+    dependsOn(tasks.testClasses)
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    systemProperty("browser", browserName)
+    systemProperty("headless", System.getProperty("headless", "true"))
+    useJUnitPlatform {
+        includeTags("ui")
+    }
+}
+
+registerUiTask("uiChromeTest", "chrome")
+registerUiTask("uiFirefoxTest", "firefox")
+
+tasks.register("uiTest") {
+    description = "Runs UI tests in Chrome and Firefox."
+    group = "verification"
+    dependsOn("uiChromeTest", "uiFirefoxTest")
 }
 
 application {
