@@ -1,11 +1,14 @@
 package org.example.ui;
 
 import java.time.Duration;
+import java.nio.file.Paths;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,8 +18,13 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-abstract class TutuUiTestBase {
-    protected static final String BASE_URL = "https://www.tutu.ru/";
+public abstract class TutuUiTestBase {
+    protected static final String LIVE_URL = "https://www.tutu.ru/";
+    protected static final String SNAPSHOT_URL = Paths.get("docs/tasks/lab3/site/main.html")
+        .toAbsolutePath()
+        .toUri()
+        .toString();
+    protected static final String BASE_URL = System.getProperty("ui.baseUrl", SNAPSHOT_URL);
 
     protected WebDriver driver;
     protected WebDriverWait wait;
@@ -32,7 +40,7 @@ abstract class TutuUiTestBase {
             default -> throw new IllegalArgumentException("Unsupported browser: " + browser);
         };
 
-        driver.manage().window().setSize(new org.openqa.selenium.Dimension(1600, 1200));
+        driver.manage().window().setSize(new Dimension(1600, 1200));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
@@ -44,35 +52,68 @@ abstract class TutuUiTestBase {
         }
     }
 
-    protected void openHomePage() {
+    public void openHomePage() {
         driver.get(BASE_URL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Авиабилеты']")));
+        wait.until(driver -> "complete".equals(
+            ((JavascriptExecutor) driver).executeScript("return document.readyState;")));
+        waitForAnyVisible(List.of(
+            By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Авиабилеты']"),
+            By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Отели']"),
+            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][contains(normalize-space(), 'Путешествуйте')]"),
+            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']"),
+            By.xpath("//input[contains(@placeholder, 'Город') or contains(@aria-label, 'Город') or contains(@aria-label, 'Электронная почта')]")
+        ));
         dismissCookieBannerIfPresent();
     }
 
-    protected WebElement waitVisible(By locator) {
+    public WebElement waitVisible(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    protected List<WebElement> waitVisibleAll(By locator) {
+    public WebElement waitPresent(By locator) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    public List<WebElement> waitVisibleAll(By locator) {
         return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
 
-    protected void scrollIntoView(WebElement element) {
+    public void scrollIntoView(WebElement element) {
         ((JavascriptExecutor) driver).executeScript(
             "arguments[0].scrollIntoView({block:'center', inline:'nearest'});", element);
     }
 
-    protected void clickWhenReady(By locator) {
+    public void clickWhenReady(By locator) {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
         scrollIntoView(element);
         element.click();
     }
 
-    protected boolean isHtml5Valid(WebElement element) {
+    public boolean isHtml5Valid(WebElement element) {
         return Boolean.TRUE.equals(
             ((JavascriptExecutor) driver).executeScript("return arguments[0].checkValidity();", element));
+    }
+
+    public WebElement waitForAnyVisible(List<By> locators) {
+        return wait.until(driver -> {
+            for (By locator : locators) {
+                List<WebElement> elements = driver.findElements(locator);
+                for (WebElement element : elements) {
+                    try {
+                        if (element.isDisplayed()) {
+                            return element;
+                        }
+                    } catch (StaleElementReferenceException ignored) {
+                        // Try the next locator when the DOM is re-rendered during page hydration.
+                    }
+                }
+            }
+            return null;
+        });
+    }
+
+    public void waitUntilUrlContains(String expectedFragment) {
+        wait.until(driver -> driver.getCurrentUrl().contains(expectedFragment));
     }
 
     private WebDriver createChromeDriver(boolean headless) {

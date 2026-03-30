@@ -2,7 +2,7 @@
   "id": "0ccf2bcb-4f40-4f29-9b64-2d7bff4cb35e",
   "version": "2.0",
   "name": "tutu-lab3",
-  "url": "https://www.tutu.ru/",
+  "url": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
   "tests": [
     {
       "id": "test-home-services",
@@ -11,37 +11,37 @@
         {
           "id": "cmd-01",
           "command": "open",
-          "target": "https://www.tutu.ru/",
+          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
           "id": "cmd-02",
-          "command": "waitForElementVisible",
+          "command": "waitForElementPresent",
           "target": "xpath=//*[normalize-space()='Идеи для поездок']",
           "value": ""
         },
         {
           "id": "cmd-03",
           "command": "assertElementPresent",
-          "target": "xpath=//*[normalize-space()='Авиабилеты']",
+          "target": "xpath=//a[contains(@href, 'avia.tutu.ru') and .//*[normalize-space()='Авиабилеты']]",
           "value": ""
         },
         {
           "id": "cmd-04",
           "command": "assertElementPresent",
-          "target": "xpath=//*[normalize-space()='Ж/д билеты']",
+          "target": "xpath=//a[contains(@href, '/poezda/') and .//*[normalize-space()='Ж/д билеты']]",
           "value": ""
         },
         {
           "id": "cmd-05",
           "command": "assertElementPresent",
-          "target": "xpath=//*[normalize-space()='Автобусы']",
+          "target": "xpath=//a[contains(@href, 'bus.tutu.ru') and .//*[normalize-space()='Автобусы']]",
           "value": ""
         },
         {
           "id": "cmd-06",
           "command": "assertElementPresent",
-          "target": "xpath=//*[normalize-space()='Отели']",
+          "target": "xpath=//a[contains(@href, 'hotel.tutu.ru') and .//*[normalize-space()='Отели']]",
           "value": ""
         }
       ]
@@ -53,55 +53,97 @@
         {
           "id": "cmd-07",
           "command": "open",
-          "target": "https://www.tutu.ru/",
+          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
           "id": "cmd-08",
-          "command": "click",
-          "target": "xpath=(//a[normalize-space()='Справочная'])[1]",
+          "command": "assertElementPresent",
+          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]",
           "value": ""
         },
         {
           "id": "cmd-09",
-          "command": "waitForLocation",
-          "target": "**/2read/**",
-          "value": ""
+          "command": "assertElementAttribute",
+          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]@href",
+          "value": "*2read*"
         },
         {
           "id": "cmd-10",
+          "command": "assertText",
+          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]",
+          "value": "Справочная"
+        },
+        {
+          "id": "cmd-10a",
           "command": "assertElementPresent",
-          "target": "xpath=//*[self::h1 or self::h2][normalize-space()='Справочная']",
+          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]",
           "value": ""
         }
       ]
     },
     {
-      "id": "test-invalid-email",
-      "name": "TC-03 Invalid Email",
+      "id": "test-hotel-destination",
+      "name": "TC-03 Hotel Destination",
       "commands": [
         {
           "id": "cmd-11",
           "command": "open",
-          "target": "https://www.tutu.ru/",
+          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
           "id": "cmd-12",
-          "command": "type",
-          "target": "xpath=//input[@type='email']",
-          "value": "invalid-email"
-        },
-        {
-          "id": "cmd-13",
-          "command": "click",
-          "target": "xpath=//button[normalize-space()='Подписаться']",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
           "value": ""
         },
         {
+          "id": "cmd-13",
+          "command": "type",
+          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
+          "value": "Казань"
+        },
+        {
           "id": "cmd-14",
-          "command": "assertEditable",
-          "target": "xpath=//input[@type='email']",
+          "command": "assertValue",
+          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
+          "value": "Казань"
+        }
+      ]
+    },
+    {
+      "id": "test-invalid-email",
+      "name": "TC-04 Subscription Controls",
+      "commands": [
+        {
+          "id": "cmd-16",
+          "command": "open",
+          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
+          "value": ""
+        },
+        {
+          "id": "cmd-17",
+          "command": "type",
+          "target": "xpath=//input[contains(@aria-label, 'Электронная почта') and @name='userEmail']",
+          "value": "invalid-email"
+        },
+        {
+          "id": "cmd-18",
+          "command": "click",
+          "target": "xpath=//input[contains(@aria-label, 'Даю согласие на обработку персональных данных и рекламные рассылки')]",
+          "value": ""
+        },
+        {
+          "id": "cmd-19",
+          "command": "assertValue",
+          "target": "xpath=//input[contains(@aria-label, 'Электронная почта') and @name='userEmail']",
+          "value": "invalid-email"
+        },
+        {
+          "id": "cmd-20",
+          "command": "assertElementPresent",
+          "target": "xpath=(//button[normalize-space()='Подписаться' or contains(@aria-label, 'Подписаться')])[last()]",
           "value": ""
         }
       ]
@@ -117,12 +159,13 @@
       "tests": [
         "test-home-services",
         "test-help",
+        "test-hotel-destination",
         "test-invalid-email"
       ]
     }
   ],
   "urls": [
-    "https://www.tutu.ru/"
+    "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html"
   ],
   "plugins": []
 }
