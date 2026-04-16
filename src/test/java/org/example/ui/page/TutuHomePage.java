@@ -73,11 +73,17 @@ public class TutuHomePage {
         return base.waitPresent(EMAIL_FIELD);
     }
 
-    public void enterInvalidEmail(String value) {
+    public void enterEmail(String value) {
         WebElement field = emailField();
         base.scrollIntoView(field);
         field.click();
+        field.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        field.sendKeys(Keys.DELETE);
         field.sendKeys(value);
+    }
+
+    public void enterInvalidEmail(String value) {
+        enterEmail(value);
     }
 
     public void submitSubscription() {
@@ -97,6 +103,14 @@ public class TutuHomePage {
         WebElement checkbox = consentCheckbox();
         base.scrollIntoView(checkbox);
         if (!checkbox.isSelected()) {
+            checkbox.click();
+        }
+    }
+
+    public void clearSubscriptionConsent() {
+        WebElement checkbox = consentCheckbox();
+        base.scrollIntoView(checkbox);
+        if (checkbox.isSelected()) {
             checkbox.click();
         }
     }
