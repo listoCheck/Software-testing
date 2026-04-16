@@ -30,12 +30,12 @@ class TutuSubscriptionUiTest extends TutuUiTestBase {
     void shouldAcceptValidEmailWhenConsentChecked() {
         TutuHomePage homePage = new TutuHomePage(this);
         homePage.open();
-        homePage.enterEmail("qa@example.com");
+        homePage.enterEmail("amuz@amuz.com");
         homePage.acceptSubscriptionConsent();
         homePage.submitSubscription();
 
         WebElement emailField = homePage.emailField();
-        assertEquals("qa@example.com", emailField.getDomProperty("value"));
+        assertEquals("asdjasdakjadlkjsjdsajkdsajkdsakjadskjslkjlkjdskjdslkjdsd@edtryuiuoicyvbhnjrxcyvtuybin.com", emailField.getDomProperty("value"));
         assertTrue(isHtml5Valid(emailField));
         assertTrue(homePage.subscribeButton().getAttribute("aria-label").contains("Подписаться"));
         assertTrue(homePage.consentCheckbox().isSelected());
