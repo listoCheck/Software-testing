@@ -23,4 +23,15 @@ class TutuHelpNavigationUiTest extends TutuUiTestBase {
         assertTrue(href.contains("/2read/"));
         assertTrue(helpPage.helpHref().contains("/2read/"));
     }
+
+    @Test
+    void shouldNavigateToHelpSectionAfterClick() {
+        TutuHomePage homePage = new TutuHomePage(this);
+        homePage.open();
+
+        homePage.openHelpSection();
+        waitUntilUrlContains("/2read/");
+
+        assertTrue(driver.getCurrentUrl().contains("/2read/"));
+    }
 }

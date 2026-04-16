@@ -13,16 +13,31 @@ import org.openqa.selenium.WebElement;
 class TutuSubscriptionUiTest extends TutuUiTestBase {
 
     @Test
-    void shouldAllowUsingSubscriptionControls() {
+    void shouldRejectInvalidEmailByHtml5Validation() {
         TutuHomePage homePage = new TutuHomePage(this);
         homePage.open();
         homePage.enterInvalidEmail("invalid-email");
-        homePage.acceptSubscriptionConsent();
+        homePage.clearSubscriptionConsent();
+        homePage.submitSubscription();
 
         WebElement emailField = homePage.emailField();
         assertEquals("invalid-email", emailField.getDomProperty("value"));
+        assertFalse(isHtml5Valid(emailField));
+        assertFalse(homePage.consentCheckbox().isSelected());
+    }
+
+    @Test
+    void shouldAcceptValidEmailWhenConsentChecked() {
+        TutuHomePage homePage = new TutuHomePage(this);
+        homePage.open();
+        homePage.enterEmail("qa@example.com");
+        homePage.acceptSubscriptionConsent();
+        homePage.submitSubscription();
+
+        WebElement emailField = homePage.emailField();
+        assertEquals("qa@example.com", emailField.getDomProperty("value"));
+        assertTrue(isHtml5Valid(emailField));
         assertTrue(homePage.subscribeButton().getAttribute("aria-label").contains("Подписаться"));
         assertTrue(homePage.consentCheckbox().isSelected());
-        assertFalse(emailField.getDomProperty("value").isBlank());
     }
 }

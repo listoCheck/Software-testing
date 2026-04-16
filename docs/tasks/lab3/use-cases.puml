@@ -1,20 +1,30 @@
-@startuml
+﻿@startuml
 left to right direction
 skinparam packageStyle rectangle
 
 actor "Гость сайта" as Guest
 
 rectangle "Tutu.ru" {
-  usecase "Просмотреть основные\nсервисы путешествий" as UC1
-  usecase "Перейти в справочный\nраздел" as UC2
-  usecase "Изучить идеи\nдля поездок" as UC3
-  usecase "Ввести параметры\nпоиска отеля" as UC4
-  usecase "Подписаться на\nemail-рассылку" as UC5
+  usecase "UC-01\nПостроить маршрут\n(откуда/куда/дата)" as UC01
+  usecase "UC-02\nИзменить параметры\nмаршрута и дату" as UC02
+  usecase "UC-03\nПереключиться между\nсервисами в шапке" as UC03
+  usecase "UC-04\nПерейти в справочную\nи открыть статью" as UC04
+  usecase "UC-05\nЗаполнить форму\nпоиска отелей" as UC05
+  usecase "UC-06\nПодписаться на\nemail-рассылку" as UC06
+  usecase "UC-07\nОбработать ошибки\nформы подписки" as UC07
+  usecase "UC-08\nВернуться на главную\nпосле навигации" as UC08
 }
 
-Guest --> UC1
-Guest --> UC2
-Guest --> UC3
-Guest --> UC4
-Guest --> UC5
+Guest --> UC01
+Guest --> UC02
+Guest --> UC03
+Guest --> UC04
+Guest --> UC05
+Guest --> UC06
+Guest --> UC07
+Guest --> UC08
+
+UC02 ..> UC01 : <<extend>>
+UC07 ..> UC06 : <<extend>>
+UC08 ..> UC03 : <<extend>>
 @enduml
