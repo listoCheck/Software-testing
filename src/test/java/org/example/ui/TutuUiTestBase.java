@@ -3,6 +3,7 @@ package org.example.ui;
 import java.time.Duration;
 import java.nio.file.Paths;
 import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
@@ -21,9 +22,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public abstract class TutuUiTestBase {
     protected static final String LIVE_URL = "https://www.tutu.ru/";
     protected static final String SNAPSHOT_URL = Paths.get("docs/tasks/lab3/site/main.html")
-        .toAbsolutePath()
-        .toUri()
-        .toString();
+            .toAbsolutePath()
+            .toUri()
+            .toString();
     protected static final String BASE_URL = System.getProperty("ui.baseUrl", SNAPSHOT_URL);
 
     protected WebDriver driver;
@@ -55,13 +56,13 @@ public abstract class TutuUiTestBase {
     public void openHomePage() {
         driver.get(BASE_URL);
         wait.until(driver -> "complete".equals(
-            ((JavascriptExecutor) driver).executeScript("return document.readyState;")));
+                ((JavascriptExecutor) driver).executeScript("return document.readyState;")));
         waitForAnyVisible(List.of(
-            By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Авиабилеты']"),
-            By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Отели']"),
-            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][contains(normalize-space(), 'Путешествуйте')]"),
-            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']"),
-            By.xpath("//input[contains(@placeholder, 'Город') or contains(@aria-label, 'Город') or contains(@aria-label, 'Электронная почта')]")
+                By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Авиабилеты']"),
+                By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Отели']"),
+                By.xpath("//*[self::h1 or self::h2 or self::div or self::span][contains(normalize-space(), 'Путешествуйте')]"),
+                By.xpath("//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']"),
+                By.xpath("//input[contains(@placeholder, 'Город') or contains(@aria-label, 'Город') or contains(@aria-label, 'Электронная почта')]")
         ));
         dismissCookieBannerIfPresent();
     }
@@ -80,7 +81,7 @@ public abstract class TutuUiTestBase {
 
     public void scrollIntoView(WebElement element) {
         ((JavascriptExecutor) driver).executeScript(
-            "arguments[0].scrollIntoView({block:'center', inline:'nearest'});", element);
+                "arguments[0].scrollIntoView({block:'center', inline:'nearest'});", element);
     }
 
     public void clickWhenReady(By locator) {
@@ -91,7 +92,7 @@ public abstract class TutuUiTestBase {
 
     public boolean isHtml5Valid(WebElement element) {
         return Boolean.TRUE.equals(
-            ((JavascriptExecutor) driver).executeScript("return arguments[0].checkValidity();", element));
+                ((JavascriptExecutor) driver).executeScript("return arguments[0].checkValidity();", element));
     }
 
     public WebElement waitForAnyVisible(List<By> locators) {
@@ -104,7 +105,6 @@ public abstract class TutuUiTestBase {
                             return element;
                         }
                     } catch (StaleElementReferenceException ignored) {
-                        // Try the next locator when the DOM is re-rendered during page hydration.
                     }
                 }
             }
@@ -139,9 +139,9 @@ public abstract class TutuUiTestBase {
 
     private void dismissCookieBannerIfPresent() {
         List<By> candidates = List.of(
-            By.xpath("//button[contains(normalize-space(.), 'Принять')]"),
-            By.xpath("//button[contains(normalize-space(.), 'Понятно')]"),
-            By.xpath("//button[contains(normalize-space(.), 'Соглас')]")
+                By.xpath("//button[contains(normalize-space(.), 'Принять')]"),
+                By.xpath("//button[contains(normalize-space(.), 'Понятно')]"),
+                By.xpath("//button[contains(normalize-space(.), 'Соглас')]")
         );
 
         for (By locator : candidates) {
