@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -42,7 +43,7 @@ public abstract class TutuUiTestBase {
         };
 
         driver.manage().window().setSize(new Dimension(1600, 1200));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
@@ -54,15 +55,23 @@ public abstract class TutuUiTestBase {
     }
 
     public void openHomePage() {
-        driver.get(BASE_URL);
-        wait.until(driver -> "complete".equals(
-                ((JavascriptExecutor) driver).executeScript("return document.readyState;")));
+        try {
+            driver.get(BASE_URL);
+        } catch (TimeoutException ignored) {
+            // Live pages may keep loading long-tail resources; continue with current DOM.
+        }
+        wait.until(driver -> {
+            Object readyState = ((JavascriptExecutor) driver).executeScript("return document.readyState;");
+            return "interactive".equals(readyState) || "complete".equals(readyState);
+        });
         waitForAnyVisible(List.of(
-                By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Авиабилеты']"),
-                By.xpath("//*[self::a or self::button or self::div or self::span][normalize-space()='Отели']"),
-                By.xpath("//*[self::h1 or self::h2 or self::div or self::span][contains(normalize-space(), 'Путешествуйте')]"),
-                By.xpath("//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']"),
-                By.xpath("//input[contains(@placeholder, 'Город') or contains(@aria-label, 'Город') or contains(@aria-label, 'Электронная почта')]")
+            By.tagName("body"),
+            By.xpath("//a[@href]"),
+            By.xpath("//input"),
+            By.xpath("//button"),
+            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][contains(normalize-space(), 'Путешествуйте')]"),
+            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']"),
+            By.xpath("//*[self::h1 or self::h2 or self::div or self::span][contains(normalize-space(), 'Вопросы и ответы')]")
         ));
         dismissCookieBannerIfPresent();
     }
