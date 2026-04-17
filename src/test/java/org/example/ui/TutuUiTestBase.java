@@ -129,6 +129,10 @@ public abstract class TutuUiTestBase {
         driver.get(url);
     }
 
+    public List<WebElement> findElements(By locator) {
+        return driver.findElements(locator);
+    }
+
     private WebDriver createChromeDriver(boolean headless) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--lang=ru-RU");
