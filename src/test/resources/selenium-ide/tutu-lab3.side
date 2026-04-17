@@ -2,7 +2,7 @@
   "id": "0ccf2bcb-4f40-4f29-9b64-2d7bff4cb35e",
   "version": "2.0",
   "name": "tutu-lab3",
-  "url": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
+  "url": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
   "tests": [
     {
       "id": "test-home-services",
@@ -11,7 +11,7 @@
         {
           "id": "cmd-01",
           "command": "open",
-          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
+          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
@@ -53,7 +53,7 @@
         {
           "id": "cmd-07",
           "command": "open",
-          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
+          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
@@ -89,7 +89,7 @@
         {
           "id": "cmd-11",
           "command": "open",
-          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
+          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
@@ -119,7 +119,7 @@
         {
           "id": "cmd-16",
           "command": "open",
-          "target": "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html",
+          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
           "value": ""
         },
         {
@@ -165,7 +165,7 @@
     }
   ],
   "urls": [
-    "file:///Users/macbook/ITMO/TPO/docs/tasks/lab3/site/main.html"
+    "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html"
   ],
   "plugins": []
 }

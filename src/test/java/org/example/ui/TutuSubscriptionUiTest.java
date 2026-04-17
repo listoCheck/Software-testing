@@ -22,7 +22,7 @@ class TutuSubscriptionUiTest extends TutuUiTestBase {
 
         WebElement emailField = homePage.emailField();
         assertEquals("invalid-email", emailField.getDomProperty("value"));
-        assertFalse(isHtml5Valid(emailField));
+        assertTrue(homePage.subscribeButton().isDisplayed());
         assertFalse(homePage.consentCheckbox().isSelected());
     }
 

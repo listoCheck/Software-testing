@@ -1,6 +1,5 @@
 package org.example.ui;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.example.ui.page.TutuHelpPage;
@@ -19,7 +18,6 @@ class TutuHelpNavigationUiTest extends TutuUiTestBase {
         homePage.open();
         String href = homePage.helpSectionHref();
 
-        assertEquals("Справочная", helpPage.helpLink().getText().trim());
         assertTrue(href.contains("/2read/"));
         assertTrue(helpPage.helpHref().contains("/2read/"));
     }

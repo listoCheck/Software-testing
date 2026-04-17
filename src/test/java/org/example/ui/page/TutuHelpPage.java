@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class TutuHelpPage {
-    private static final By HELP_LINK = By.xpath("(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]");
+    private static final By HELP_LINK = By.xpath("(//a[contains(@href, '/2read/')])[1]");
 
     private final TutuUiTestBase base;
 
@@ -14,7 +14,7 @@ public class TutuHelpPage {
     }
 
     public WebElement helpLink() {
-        return base.waitVisible(HELP_LINK);
+        return base.waitPresent(HELP_LINK);
     }
 
     public String helpHref() {

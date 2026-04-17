@@ -116,6 +116,10 @@ public abstract class TutuUiTestBase {
         wait.until(driver -> driver.getCurrentUrl().contains(expectedFragment));
     }
 
+    public void openUrl(String url) {
+        driver.get(url);
+    }
+
     private WebDriver createChromeDriver(boolean headless) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--lang=ru-RU");
