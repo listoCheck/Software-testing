@@ -3,6 +3,7 @@ package org.example.ui;
 import java.time.Duration;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.function.Predicate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
@@ -76,6 +77,15 @@ public abstract class TutuUiTestBase {
 
     public List<WebElement> waitVisibleAll(By locator) {
         return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+    }
+
+    public List<WebElement> waitVisibleMatching(By locator, Predicate<List<WebElement>> predicate) {
+        return wait.until(driver -> {
+            List<WebElement> visibleElements = driver.findElements(locator).stream()
+                .filter(WebElement::isDisplayed)
+                .toList();
+            return predicate.test(visibleElements) ? visibleElements : null;
+        });
     }
 
     public void scrollIntoView(WebElement element) {
