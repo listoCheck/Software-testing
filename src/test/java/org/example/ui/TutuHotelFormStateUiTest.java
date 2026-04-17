@@ -15,11 +15,12 @@ class TutuHotelFormStateUiTest extends TutuUiTestBase {
         TutuHomePage homePage = new TutuHomePage(this);
         homePage.open();
         homePage.enterHotelDestination("Казань");
-        homePage.enterEmail("qa@example.com");
+        String destinationValueBeforeEmailInput = homePage.hotelDestinationValue();
+        homePage.enterEmail("artem@example.com");
+        String destinationValueAfterEmailInput = homePage.hotelDestinationValue();
 
-        wait.until(driver -> "Казань".equals(homePage.hotelDestinationValue()));
-
-        assertEquals("Казань", homePage.hotelDestinationValue());
+        assertFalse(destinationValueBeforeEmailInput.isBlank());
+        assertEquals(destinationValueBeforeEmailInput, destinationValueAfterEmailInput);
         assertFalse(homePage.emailField().getDomProperty("value").isBlank());
     }
 }

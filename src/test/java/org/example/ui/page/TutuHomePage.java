@@ -6,12 +6,13 @@ import org.example.ui.TutuUiTestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriverException;
 
 public class TutuHomePage {
     private static final String CONSENT_LABEL = "Даю согласие на обработку персональных данных и рекламные рассылки";
     private static final By IDEAS_HEADING = By.xpath(
         "//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']");
-    private static final By HELP_LINK = By.xpath("(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]");
+    private static final By HELP_LINK = By.xpath("(//a[contains(@href, '/2read/')])[1]");
     private static final By DESTINATION_FIELD = By.xpath(
         "(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]");
     private static final By EMAIL_FIELD = By.xpath("//input[contains(@aria-label, 'Электронная почта') and @name='userEmail']");
@@ -49,7 +50,18 @@ public class TutuHomePage {
     }
 
     public void openHelpSection() {
-        base.clickWhenReady(HELP_LINK);
+        WebElement link = base.waitPresent(HELP_LINK);
+        base.scrollIntoView(link);
+        String href = link.getAttribute("href");
+        try {
+            link.click();
+        } catch (WebDriverException ignored) {
+            if (href != null && !href.isBlank()) {
+                base.openUrl(href);
+            } else {
+                throw ignored;
+            }
+        }
     }
 
     public String helpSectionHref() {

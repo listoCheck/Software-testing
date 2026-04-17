@@ -91,6 +91,7 @@ fun registerUiTask(taskName: String, browserName: String) = tasks.register<Test>
     classpath = sourceSets.test.get().runtimeClasspath
     systemProperty("browser", browserName)
     systemProperty("headless", System.getProperty("headless", "true"))
+    System.getProperty("ui.baseUrl")?.let { systemProperty("ui.baseUrl", it) }
     useJUnitPlatform {
         includeTags("ui")
     }
