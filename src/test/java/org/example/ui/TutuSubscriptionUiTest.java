@@ -27,6 +27,21 @@ class TutuSubscriptionUiTest extends TutuUiTestBase {
     }
 
     @Test
+    void shouldAcceptInValidEmailWhenConsentChecked() {
+        TutuHomePage homePage = new TutuHomePage(this);
+        homePage.open();
+        homePage.enterEmail("adasdsaddsagdsgdsagggdaad@asdsadasdsdfetvretv.sfddsdsbdsds");
+        homePage.acceptSubscriptionConsent();
+        homePage.submitSubscription();
+
+        WebElement emailField = homePage.emailField();
+        assertEquals("adasdsaddsagdsgdsagggdaad@asdsadasdsdfetvretv.sfddsdsbdsds", emailField.getDomProperty("value"));
+        assertTrue(isHtml5Valid(emailField));
+        assertTrue(homePage.subscribeButton().getAttribute("aria-label").contains("Подписаться"));
+        assertTrue(homePage.consentCheckbox().isSelected());
+    }
+
+    @Test
     void shouldAcceptValidEmailWhenConsentChecked() {
         TutuHomePage homePage = new TutuHomePage(this);
         homePage.open();
@@ -35,7 +50,7 @@ class TutuSubscriptionUiTest extends TutuUiTestBase {
         homePage.submitSubscription();
 
         WebElement emailField = homePage.emailField();
-        assertEquals("asdjasdakjadlkjsjdsajkdsajkdsakjadskjslkjlkjdskjdslkjdsd@edtryuiuoicyvbhnjrxcyvtuybin.com", emailField.getDomProperty("value"));
+        assertEquals("amuz@amuz.com", emailField.getDomProperty("value"));
         assertTrue(isHtml5Valid(emailField));
         assertTrue(homePage.subscribeButton().getAttribute("aria-label").contains("Подписаться"));
         assertTrue(homePage.consentCheckbox().isSelected());
