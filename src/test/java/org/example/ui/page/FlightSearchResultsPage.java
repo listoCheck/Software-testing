@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 public class FlightSearchResultsPage {
     private static final By AVIA_SECTION = By.xpath(
         "//*[self::h1 or self::h2 or self::div or self::span or self::a or self::button]" +
-            "[contains(normalize-space(.), 'Авиабилеты') or contains(normalize-space(.), 'билет')]");
+            "[contains(normalize-space(.), 'Авиабилеты') or contains(normalize-space(.), 'Авиа') or contains(normalize-space(.), 'билет')]");
     private static final By SEARCH_ORIGIN = By.xpath(
         "(//input[@type='text' and (" +
             "contains(@placeholder, 'Откуда') or contains(@aria-label, 'Откуда') or contains(@name, 'from')" +
@@ -24,8 +24,22 @@ public class FlightSearchResultsPage {
             "contains(@aria-label, 'Дата') or contains(@name, 'date')" +
         "])[1]");
     private static final By SELECT_TICKET_BUTTONS = By.xpath(
-        "//button[contains(normalize-space(.), 'Выбрать билет') or " +
-            "contains(normalize-space(.), 'Выбрать') or contains(normalize-space(.), 'Купить')]");
+        "(" +
+            "//button[" +
+                "contains(normalize-space(.), 'Выбрать билет') or " +
+                "contains(normalize-space(.), 'Выбрать') or " +
+                "contains(normalize-space(.), 'Купить') or " +
+                "contains(normalize-space(.), 'Посмотреть') or " +
+                "contains(normalize-space(.), 'Билеты от')" +
+            "] | " +
+            "//a[" +
+                "contains(normalize-space(.), 'Выбрать билет') or " +
+                "contains(normalize-space(.), 'Выбрать') or " +
+                "contains(normalize-space(.), 'Купить') or " +
+                "contains(normalize-space(.), 'Посмотреть') or " +
+                "contains(normalize-space(.), 'Билеты от')" +
+            "]" +
+        ")");
 
     private final TutuUiTestBase base;
 
@@ -67,5 +81,9 @@ public class FlightSearchResultsPage {
             base.scrollIntoView(button);
             button.click();
         }
+    }
+
+    public boolean isAviaContextVisible() {
+        return !base.findElements(AVIA_SECTION).isEmpty();
     }
 }

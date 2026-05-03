@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Tutu.ru — Билеты на поезда, самолёты, автобусы</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; }
+header nav a { margin: 0 8px; text-decoration: none; color: #333; }
+.search-widget { padding: 20px; background: #f5f5f5; }
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.tab-btn { padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; background: #fff; }
+.tab-btn.active { background: #e0e0ff; font-weight: bold; }
+.form-section { display: none; }
+.form-section.visible { display: block; }
+.form-row { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+.form-row input { padding: 8px; border: 1px solid #ccc; font-size: 14px; }
+.form-row input[aria-invalid="true"] { border-color: red; }
+.swap-btn { padding: 8px; cursor: pointer; font-size: 18px; border: 1px solid #999; background: #fff; }
+.trip-type { display: flex; gap: 16px; margin-bottom: 8px; }
+.trip-type span { cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.trip-type span.active { background: #ddd; font-weight: bold; }
+.passenger-selector { padding: 8px; border: 1px solid #ccc; cursor: pointer; min-width: 120px; background: #fff; display: inline-block; }
+.passenger-dialog { border: 1px solid #ccc; padding: 12px; background: #fff; margin-top: 4px; display: none; }
+.passenger-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.passenger-row button { width: 28px; height: 28px; cursor: pointer; }
+.search-btn { padding: 10px 24px; background: #ff6600; color: #fff; border: none; cursor: pointer; font-size: 14px; }
+.calendar { border: 1px solid #ccc; padding: 12px; background: #fff; display: none; width: 280px; }
+.calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.calendar-header button { cursor: pointer; padding: 4px 8px; }
+.calendar-days { display: flex; flex-wrap: wrap; gap: 2px; }
+.calendar-days button { width: 36px; height: 36px; cursor: pointer; border: 1px solid #eee; background: #fff; }
+.calendar-days button.disabled { color: #ccc; cursor: default; }
+.suggest-list { border: 1px solid #ccc; background: #fff; }
+.suggest-list div { padding: 8px; cursor: pointer; }
+.suggest-list div:hover { background: #f0f0f0; }
+.hotel-guests-widget { padding: 8px; border: 1px solid #ccc; display: inline-block; cursor: pointer; }
+#ideas-section { margin-top: 1200px; padding: 40px 20px; background: #fff; }
+#ideas-section h2 { font-size: 24px; }
+.ideas-cards { display: flex; gap: 16px; flex-wrap: wrap; }
+.ideas-cards a { display: block; padding: 16px; border: 1px solid #ddd; text-decoration: none; color: #333; width: 160px; min-height: 80px; }
+#subscription { padding: 40px 20px; background: #f9f9f9; }
+#subscription input[type="email"] { padding: 8px; font-size: 14px; width: 240px; }
+#subscription input[type="checkbox"] { margin: 0 8px; }
+#subscription button { padding: 10px 20px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#avia" onclick="switchTab('avia');return false;">Авиабилеты</a>
+    <a href="#train" onclick="switchTab('train');return false;">Ж/д билеты</a>
+    <a href="#bus" onclick="switchTab('bus');return false;">Автобусы</a>
+    <a href="#hotel" onclick="switchTab('hotel');return false;">Отели</a>
+    <a href="#prigorod" onclick="switchTab('prigorod');return false;">Электрички</a>
+    <a href="/2read/">Справочная</a>
+  </nav>
+</header>
+
+<main>
+<div class="search-widget">
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-btn-avia" onclick="switchTab('avia')">Авиабилеты</button>
+    <button class="tab-btn" id="tab-btn-hotel" onclick="switchTab('hotel')">Отели</button>
+    <button class="tab-btn" id="tab-btn-train" onclick="switchTab('train')">Ж/д билеты</button>
+    <button class="tab-btn" id="tab-btn-prigorod" onclick="switchTab('prigorod')">Электрички</button>
+  </div>
+
+  <!-- AVIA FORM -->
+  <div id="form-avia" class="form-section visible">
+    <div class="trip-type">
+      <span id="opt-oneway" class="active" onclick="setTripType('oneway')">В одну сторону</span>
+      <span id="opt-roundtrip" onclick="setTripType('roundtrip')">Туда-обратно</span>
+    </div>
+    <div class="form-row">
+      <input type="text" id="avia-origin" placeholder="Откуда" aria-label="Откуда"
+             oninput="showSuggest(this,'suggest-origin')" autocomplete="off"/>
+      <div id="suggest-origin" class="suggest-list" role="listbox" style="display:none">
+        <div onclick="pickSuggest('avia-origin','suggest-origin',this)">Москва</div>
+        <div onclick="pickSuggest('avia-origin','suggest-origin',this)">Москва (Шереметьево)</div>
+        <div onclick="pickSuggest('avia-origin','suggest-origin',this)">Московский узел</div>
+      </div>
+      <button class="swap-btn" data-ti="changeDirection" aria-label="Поменять направление"
+              onclick="swapAviaFields()">⇄</button>
+      <input type="text" id="avia-dest" placeholder="Куда" aria-label="Куда"
+             oninput="showSuggest(this,'suggest-dest')" autocomplete="off"/>
+      <div id="suggest-dest" class="suggest-list" role="listbox" style="display:none">
+        <div onclick="pickSuggest('avia-dest','suggest-dest',this)">Санкт-Петербург</div>
+        <div onclick="pickSuggest('avia-dest','suggest-dest',this)">Санкт-Петербург (Пулково)</div>
+        <div onclick="pickSuggest('avia-dest','suggest-dest',this)">Казань</div>
+        <div onclick="pickSuggest('avia-dest','suggest-dest',this)">Сочи</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <input type="text" id="avia-date" placeholder="Когда" aria-label="Дата отправления"
+             onclick="openCal('cal-avia',this)" readonly/>
+      <input type="text" id="avia-return" placeholder="Обратно" aria-label="Дата обратно"
+             style="display:none" onclick="openCal('cal-return',this)" readonly/>
+    </div>
+    <div id="cal-avia" class="calendar">
+      <div class="calendar-header">
+        <button class="prev" onclick="prevMonth('cal-avia')">‹</button>
+        <div class="month month-title month-heading" id="cal-avia-label"></div>
+        <button class="next" onclick="nextMonth('cal-avia')">›</button>
+      </div>
+      <div class="calendar-days" id="cal-avia-days"></div>
+    </div>
+    <div id="cal-return" class="calendar">
+      <div class="calendar-header">
+        <button class="prev" onclick="prevMonth('cal-return')">‹</button>
+        <div class="month month-title month-heading" id="cal-return-label"></div>
+        <button class="next" onclick="nextMonth('cal-return')">›</button>
+      </div>
+      <div class="calendar-days" id="cal-return-days"></div>
+    </div>
+    <div class="form-row">
+      <div class="passenger-selector" id="pax-btn" onclick="togglePaxDialog()">
+        <span id="pax-text">1 Пассажир</span>
+      </div>
+      <div id="pax-dialog" class="passenger-dialog" role="dialog">
+        <div class="passenger-row">
+          <span>Взрослые (12+)</span>
+          <button aria-label="-" onclick="changePax('adult',-1)">−</button>
+          <span id="cnt-adult">1</span>
+          <button aria-label="+" data-ti="plus" onclick="changePax('adult',1)">+</button>
+        </div>
+        <div class="passenger-row">
+          <span>Дети (2-11)</span>
+          <button aria-label="-" onclick="changePax('child',-1)">−</button>
+          <span id="cnt-child">0</span>
+          <button aria-label="+" data-ti="plus" onclick="changePax('child',1)">+</button>
+        </div>
+        <div class="passenger-row">
+          <span>Младенцы (до 2)</span>
+          <button aria-label="-" onclick="changePax('infant',-1)">−</button>
+          <span id="cnt-infant">0</span>
+          <button aria-label="+" data-ti="plus" onclick="changePax('infant',1)">+</button>
+        </div>
+        <button onclick="applyPax()">Готово</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <button class="search-btn" onclick="searchAvia()">Найти авиабилеты</button>
+    </div>
+  </div>
+
+  <!-- HOTEL FORM -->
+  <div id="form-hotel" class="form-section">
+    <div class="form-row">
+      <input type="text" id="hotel-dest" data-ti="input" placeholder="Куда (отель или город)"
+             aria-label="Куда (отель)" oninput="showSuggest(this,'suggest-hotel')" autocomplete="off"/>
+      <div id="suggest-hotel" class="suggest-list" role="listbox" style="display:none">
+        <div onclick="pickSuggest('hotel-dest','suggest-hotel',this)">Сочи</div>
+        <div onclick="pickSuggest('hotel-dest','suggest-hotel',this)">Москва</div>
+        <div onclick="pickSuggest('hotel-dest','suggest-hotel',this)">Санкт-Петербург</div>
+        <div onclick="pickSuggest('hotel-dest','suggest-hotel',this)">Казань</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <input type="text" id="hotel-checkin" placeholder="Заезд" data-ti="checkin"
+             onclick="openCal('cal-hotel',this)" readonly/>
+      <input type="text" id="hotel-checkout" placeholder="Выезд"
+             onclick="openCal('cal-hotel-out',this)" readonly/>
+    </div>
+    <div id="cal-hotel" class="calendar">
+      <div class="calendar-header">
+        <button class="prev" onclick="prevMonth('cal-hotel')">‹</button>
+        <div class="month month-title month-heading" id="cal-hotel-label"></div>
+        <button class="next" onclick="nextMonth('cal-hotel')">›</button>
+      </div>
+      <div class="calendar-days" id="cal-hotel-days"></div>
+    </div>
+    <div id="cal-hotel-out" class="calendar">
+      <div class="calendar-header">
+        <button class="prev" onclick="prevMonth('cal-hotel-out')">‹</button>
+        <div class="month month-title month-heading" id="cal-hotel-out-label"></div>
+        <button class="next" onclick="nextMonth('cal-hotel-out')">›</button>
+      </div>
+      <div class="calendar-days" id="cal-hotel-out-days"></div>
+    </div>
+    <div class="form-row">
+      <div class="hotel-guests-widget" id="hotel-guests">Гости: <span>2 гостя</span></div>
+    </div>
+    <div class="form-row">
+      <button class="search-btn" onclick="searchHotel()">Найти отели</button>
+    </div>
+  </div>
+
+  <!-- TRAIN FORM -->
+  <div id="form-train" class="form-section">
+    <div class="form-row">
+      <input type="text" id="train-from" data-ti="input" placeholder="Откуда" aria-label="Откуда"
+             oninput="showSuggest(this,'suggest-train-from')" autocomplete="off"/>
+      <div id="suggest-train-from" class="suggest-list" role="listbox" style="display:none">
+        <div onclick="pickSuggest('train-from','suggest-train-from',this)">Москва</div>
+        <div onclick="pickSuggest('train-from','suggest-train-from',this)">Санкт-Петербург</div>
+      </div>
+      <button class="swap-btn" data-ti="changeDirection" onclick="swapTrainFields()">⇄</button>
+      <input type="text" id="train-to" data-ti="input" placeholder="Куда" aria-label="Куда"
+             oninput="showSuggest(this,'suggest-train-to')" autocomplete="off"/>
+      <div id="suggest-train-to" class="suggest-list" role="listbox" style="display:none">
+        <div onclick="pickSuggest('train-to','suggest-train-to',this)">Санкт-Петербург</div>
+        <div onclick="pickSuggest('train-to','suggest-train-to',this)">Казань</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <input type="text" id="train-date" placeholder="Когда" onclick="openCal('cal-train',this)" readonly/>
+      <div id="cal-train" class="calendar">
+        <div class="calendar-header">
+          <button class="prev" onclick="prevMonth('cal-train')">‹</button>
+          <div class="month month-title month-heading" id="cal-train-label"></div>
+          <button class="next" onclick="nextMonth('cal-train')">›</button>
+        </div>
+        <div class="calendar-days" id="cal-train-days"></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <button class="search-btn">Найти билеты</button>
+    </div>
+  </div>
+
+  <!-- PRIGOROD FORM -->
+  <div id="form-prigorod" class="form-section">
+    <div class="form-row">
+      <input type="text" placeholder="Откуда" aria-label="Откуда"/>
+      <input type="text" placeholder="Куда" aria-label="Куда"/>
+      <input type="text" placeholder="Когда"/>
+    </div>
+    <div class="form-row">
+      <button class="search-btn">Найти электрички</button>
+    </div>
+  </div>
+</div>
+</main>
+
+<section id="ideas-section">
+  <h2>Идеи для поездок</h2>
+  <div class="ideas-cards">
+    <a href="/ideas/moscow/" class="card item"><img src="" alt="Москва"/><span>Москва</span></a>
+    <a href="/ideas/spb/" class="card item"><img src="" alt="Санкт-Петербург"/><span>Санкт-Петербург</span></a>
+    <a href="/ideas/sochi/" class="card item"><img src="" alt="Сочи"/><span>Сочи</span></a>
+    <a href="/ideas/kazan/" class="card item"><img src="" alt="Казань"/><span>Казань</span></a>
+    <a href="/ideas/nizhny/" class="card item"><img src="" alt="Нижний Новгород"/><span>Нижний Новгород</span></a>
+  </div>
+</section>
+
+<section id="subscription">
+  <h3>Подпишитесь на рассылку</h3>
+  <input type="email" name="userEmail" aria-label="Электронная почта" placeholder="your@email.com"/>
+  <input type="checkbox" aria-label="Даю согласие на обработку персональных данных и рекламные рассылки"/>
+  <button aria-label="Подписаться">Подписаться</button>
+</section>
+
+<script>
+const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const calState = {};
+let pax = {adult:1, child:0, infant:0};
+
+function switchTab(tab) {
+  document.querySelectorAll('.form-section').forEach(f => f.classList.remove('visible'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const f = document.getElementById('form-' + tab);
+  if (f) f.classList.add('visible');
+  const b = document.getElementById('tab-btn-' + tab);
+  if (b) b.classList.add('active');
+}
+
+function setTripType(type) {
+  document.getElementById('opt-oneway').classList.toggle('active', type === 'oneway');
+  document.getElementById('opt-roundtrip').classList.toggle('active', type === 'roundtrip');
+  document.getElementById('avia-return').style.display = type === 'roundtrip' ? '' : 'none';
+}
+
+function showSuggest(input, id) {
+  const el = document.getElementById(id);
+  el.style.display = input.value.length >= 2 ? 'block' : 'none';
+}
+
+function pickSuggest(inputId, suggestId, item) {
+  document.getElementById(inputId).value = item.textContent.trim();
+  document.getElementById(suggestId).style.display = 'none';
+}
+
+function swapAviaFields() {
+  const o = document.getElementById('avia-origin');
+  const d = document.getElementById('avia-dest');
+  [o.value, d.value] = [d.value, o.value];
+}
+
+function swapTrainFields() {
+  const o = document.getElementById('train-from');
+  const d = document.getElementById('train-to');
+  [o.value, d.value] = [d.value, o.value];
+}
+
+function togglePaxDialog() {
+  const d = document.getElementById('pax-dialog');
+  d.style.display = d.style.display === 'block' ? 'none' : 'block';
+}
+
+function changePax(type, delta) {
+  pax[type] = Math.max(0, pax[type] + delta);
+  if (type === 'adult') pax.adult = Math.max(1, pax.adult);
+  document.getElementById('cnt-' + type).textContent = pax[type];
+}
+
+function applyPax() {
+  const total = pax.adult + pax.child + pax.infant;
+  const w = total === 1 ? 'Пассажир' : total <= 4 ? 'Пассажира' : 'Пассажиров';
+  document.getElementById('pax-text').textContent = total + ' ' + w;
+  document.getElementById('pax-dialog').style.display = 'none';
+}
+
+function initCal(id) {
+  if (!calState[id]) {
+    const n = new Date();
+    calState[id] = {y: n.getFullYear(), m: n.getMonth(), target: null};
+  }
+}
+
+function openCal(id, input) {
+  document.querySelectorAll('.calendar').forEach(c => { if (c.id !== id) c.style.display = 'none'; });
+  initCal(id);
+  calState[id].target = input;
+  renderCal(id);
+  document.getElementById(id).style.display = 'block';
+}
+
+function renderCal(id) {
+  const s = calState[id];
+  const lbl = document.getElementById(id + '-label');
+  if (lbl) lbl.textContent = MONTHS[s.m] + ' ' + s.y;
+  const container = document.getElementById(id + '-days');
+  if (!container) return;
+  container.innerHTML = '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const days = new Date(s.y, s.m + 1, 0).getDate();
+  for (let d = 1; d <= days; d++) {
+    const dt = new Date(s.y, s.m, d);
+    const iso = s.y + '-' + String(s.m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const btn = document.createElement('button');
+    btn.textContent = d;
+    btn.dataset.date = iso;
+    if (dt < today) {
+      btn.classList.add('disabled');
+      btn.disabled = true;
+    } else {
+      btn.onclick = () => pickDay(id, iso);
+    }
+    container.appendChild(btn);
+  }
+}
+
+function pickDay(id, iso) {
+  const s = calState[id];
+  if (s && s.target) {
+    const parts = iso.split('-');
+    s.target.value = parts[2] + '.' + parts[1] + '.' + parts[0];
+  }
+  document.getElementById(id).style.display = 'none';
+}
+
+function nextMonth(id) {
+  initCal(id);
+  calState[id].m++;
+  if (calState[id].m > 11) { calState[id].m = 0; calState[id].y++; }
+  renderCal(id);
+}
+
+function prevMonth(id) {
+  initCal(id);
+  calState[id].m--;
+  if (calState[id].m < 0) { calState[id].m = 11; calState[id].y--; }
+  renderCal(id);
+}
+
+function searchAvia() {
+  const origin = document.getElementById('avia-origin').value;
+  const dest = document.getElementById('avia-dest').value;
+  if (!origin || !dest) {
+    document.getElementById('avia-origin').setAttribute('aria-invalid','true');
+    document.getElementById('avia-dest').setAttribute('aria-invalid','true');
+    return;
+  }
+  const date = document.getElementById('avia-date').value;
+  sessionStorage.setItem('avia-from', origin);
+  sessionStorage.setItem('avia-to', dest);
+  sessionStorage.setItem('avia-date', date);
+  window.location.href = 'avia/index.html';
+}
+
+function searchHotel() {
+  window.location.href = '#hotel-results';
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.suggest-list') && !e.target.matches('input')) {
+    document.querySelectorAll('.suggest-list').forEach(s => s.style.display = 'none');
+  }
+  if (!e.target.closest('.calendar') && !e.target.matches('input[readonly]')) {
+    document.querySelectorAll('.calendar').forEach(c => c.style.display = 'none');
+  }
+});
+
+window.addEventListener('load', () => {
+  ['cal-avia','cal-return','cal-hotel','cal-hotel-out','cal-train'].forEach(id => {
+    initCal(id); renderCal(id);
+  });
+});
+</script>
+</body>
+</html>

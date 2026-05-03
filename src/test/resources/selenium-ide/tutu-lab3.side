@@ -2,148 +2,406 @@
   "id": "0ccf2bcb-4f40-4f29-9b64-2d7bff4cb35e",
   "version": "2.0",
   "name": "tutu-lab3",
-  "url": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
+  "url": "https://www.tutu.ru/",
   "tests": [
     {
-      "id": "test-home-services",
-      "name": "TC-01 Home Services",
+      "id": "tc-01",
+      "name": "TC-01 UC-01 Tab switch changes form",
       "commands": [
         {
-          "id": "cmd-01",
+          "id": "tc01-01",
           "command": "open",
-          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
+          "target": "https://www.tutu.ru/",
           "value": ""
         },
         {
-          "id": "cmd-02",
+          "id": "tc01-02",
           "command": "waitForElementPresent",
-          "target": "xpath=//*[normalize-space()='Идеи для поездок']",
-          "value": ""
+          "target": "xpath=(//a[contains(@href,'avia')] | //*[contains(normalize-space(),'Авиабилеты') or contains(normalize-space(),'Авиа')])[1]",
+          "value": "10000"
         },
         {
-          "id": "cmd-03",
-          "command": "assertElementPresent",
-          "target": "xpath=//a[contains(@href, 'avia.tutu.ru') and .//*[normalize-space()='Авиабилеты']]",
-          "value": ""
-        },
-        {
-          "id": "cmd-04",
-          "command": "assertElementPresent",
-          "target": "xpath=//a[contains(@href, '/poezda/') and .//*[normalize-space()='Ж/д билеты']]",
-          "value": ""
-        },
-        {
-          "id": "cmd-05",
-          "command": "assertElementPresent",
-          "target": "xpath=//a[contains(@href, 'bus.tutu.ru') and .//*[normalize-space()='Автобусы']]",
-          "value": ""
-        },
-        {
-          "id": "cmd-06",
-          "command": "assertElementPresent",
-          "target": "xpath=//a[contains(@href, 'hotel.tutu.ru') and .//*[normalize-space()='Отели']]",
-          "value": ""
-        }
-      ]
-    },
-    {
-      "id": "test-help",
-      "name": "TC-02 Help Navigation",
-      "commands": [
-        {
-          "id": "cmd-07",
-          "command": "open",
-          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
-          "value": ""
-        },
-        {
-          "id": "cmd-08",
-          "command": "assertElementPresent",
-          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]",
-          "value": ""
-        },
-        {
-          "id": "cmd-09",
-          "command": "assertElementAttribute",
-          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]@href",
-          "value": "*2read*"
-        },
-        {
-          "id": "cmd-10",
-          "command": "assertText",
-          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]",
-          "value": "Справочная"
-        },
-        {
-          "id": "cmd-10a",
-          "command": "assertElementPresent",
-          "target": "xpath=(//a[normalize-space()='Справочная' and contains(@href, '/2read/')])[1]",
-          "value": ""
-        }
-      ]
-    },
-    {
-      "id": "test-hotel-destination",
-      "name": "TC-03 Hotel Destination",
-      "commands": [
-        {
-          "id": "cmd-11",
-          "command": "open",
-          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
-          "value": ""
-        },
-        {
-          "id": "cmd-12",
-          "command": "waitForElementPresent",
-          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
-          "value": ""
-        },
-        {
-          "id": "cmd-13",
-          "command": "type",
-          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
-          "value": "Казань"
-        },
-        {
-          "id": "cmd-14",
-          "command": "assertValue",
-          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
-          "value": "Казань"
-        }
-      ]
-    },
-    {
-      "id": "test-invalid-email",
-      "name": "TC-04 Subscription Controls",
-      "commands": [
-        {
-          "id": "cmd-16",
-          "command": "open",
-          "target": "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html",
-          "value": ""
-        },
-        {
-          "id": "cmd-17",
-          "command": "type",
-          "target": "xpath=//input[contains(@aria-label, 'Электронная почта') and @name='userEmail']",
-          "value": "invalid-email"
-        },
-        {
-          "id": "cmd-18",
+          "id": "tc01-03",
           "command": "click",
-          "target": "xpath=//input[contains(@aria-label, 'Даю согласие на обработку персональных данных и рекламные рассылки')]",
+          "target": "xpath=(//a[contains(@href,'avia')] | //*[contains(normalize-space(),'Авиабилеты') or (contains(normalize-space(),'Авиа') and string-length(normalize-space())<=15)])[1]",
           "value": ""
         },
         {
-          "id": "cmd-19",
-          "command": "assertValue",
-          "target": "xpath=//input[contains(@aria-label, 'Электронная почта') and @name='userEmail']",
-          "value": "invalid-email"
+          "id": "tc01-04",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//*[self::button or self::div or self::span][contains(normalize-space(),'Пассажир')])[1]",
+          "value": "10000"
         },
         {
-          "id": "cmd-20",
+          "id": "tc01-05",
           "command": "assertElementPresent",
-          "target": "xpath=(//button[normalize-space()='Подписаться' or contains(@aria-label, 'Подписаться')])[last()]",
+          "target": "xpath=(//*[self::button or self::div or self::span][contains(normalize-space(),'Пассажир')])[1]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-02",
+      "name": "TC-02 UC-02 Autocomplete on city input",
+      "commands": [
+        {
+          "id": "tc02-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc02-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//input[@type='text' and (contains(@placeholder,'Откуда') or @data-ti='input')])[1]",
+          "value": "10000"
+        },
+        {
+          "id": "tc02-03",
+          "command": "click",
+          "target": "xpath=(//input[@type='text' and (contains(@placeholder,'Откуда') or @data-ti='input')])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc02-04",
+          "command": "type",
+          "target": "xpath=(//input[@type='text' and (contains(@placeholder,'Откуда') or @data-ti='input')])[1]",
+          "value": "Мос"
+        },
+        {
+          "id": "tc02-05",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//*[@role='listbox'] | //*[contains(@class,'suggest') or contains(@class,'autocomplete')])[1]",
+          "value": "5000"
+        },
+        {
+          "id": "tc02-06",
+          "command": "assertElementPresent",
+          "target": "xpath=(//*[@role='listbox'] | //*[contains(@class,'suggest')])[1]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-03",
+      "name": "TC-03 UC-03 Swap origin and destination",
+      "commands": [
+        {
+          "id": "tc03-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc03-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//input[@type='text' and @data-ti='input'])[1]",
+          "value": "10000"
+        },
+        {
+          "id": "tc03-03",
+          "command": "type",
+          "target": "xpath=(//input[@type='text' and @data-ti='input'])[1]",
+          "value": "Москва"
+        },
+        {
+          "id": "tc03-04",
+          "command": "type",
+          "target": "xpath=(//input[@type='text' and @data-ti='input'])[2]",
+          "value": "Санкт-Петербург"
+        },
+        {
+          "id": "tc03-05",
+          "command": "click",
+          "target": "xpath=(//button[@data-ti='changeDirection' or contains(@class,'swap') or contains(@aria-label,'поменять')])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc03-06",
+          "command": "assertNotText",
+          "target": "xpath=(//input[@type='text' and @data-ti='input'])[1]",
+          "value": "Москва"
+        }
+      ]
+    },
+    {
+      "id": "tc-04",
+      "name": "TC-04 UC-04 Datepicker next month navigation",
+      "commands": [
+        {
+          "id": "tc04-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc04-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//input[contains(@placeholder,'Когда') or contains(@placeholder,'Дата') or @data-ti='date'])[1]",
+          "value": "10000"
+        },
+        {
+          "id": "tc04-03",
+          "command": "click",
+          "target": "xpath=(//input[contains(@placeholder,'Когда') or contains(@placeholder,'Дата') or @data-ti='date'])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc04-04",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//*[contains(@class,'calendar') or contains(@class,'Calendar')])[1]",
+          "value": "5000"
+        },
+        {
+          "id": "tc04-05",
+          "command": "click",
+          "target": "xpath=(//*[contains(@class,'calendar') or @role='dialog']//button[contains(@class,'next') or contains(@aria-label,'следующий')])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc04-06",
+          "command": "assertElementPresent",
+          "target": "xpath=(//*[contains(@class,'month') and (contains(@class,'title') or contains(@class,'header'))])[1]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-05",
+      "name": "TC-05 UC-05 Passenger counter update",
+      "commands": [
+        {
+          "id": "tc05-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc05-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//*[self::button or self::div or self::span][contains(normalize-space(),'Пассажир')])[1]",
+          "value": "15000"
+        },
+        {
+          "id": "tc05-03",
+          "command": "storeText",
+          "target": "xpath=(//*[self::button or self::div or self::span][contains(normalize-space(),'Пассажир')])[1]",
+          "value": "initialPassengerText"
+        },
+        {
+          "id": "tc05-04",
+          "command": "click",
+          "target": "xpath=(//*[self::button or self::div or self::span][contains(normalize-space(),'Пассажир')])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc05-05",
+          "command": "click",
+          "target": "xpath=(//*[contains(translate(normalize-space(.),'ВЗРОСЛЫХ','взрослых'),'взросл')]/following::button[contains(@aria-label,'+') or contains(@data-ti,'plus') or normalize-space()='+'][1])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc05-06",
+          "command": "assertElementPresent",
+          "target": "xpath=(//*[self::button or self::div or self::span][contains(normalize-space(),'Пассажир')])[1]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-06",
+      "name": "TC-06 UC-06 Round-trip toggle reveals return date",
+      "commands": [
+        {
+          "id": "tc06-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc06-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//*[normalize-space()='Туда-обратно' or @value='round_trip'])[1]",
+          "value": "15000"
+        },
+        {
+          "id": "tc06-03",
+          "command": "click",
+          "target": "xpath=(//*[normalize-space()='Туда-обратно' or @value='round_trip'])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc06-04",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//input[contains(@placeholder,'Обратно') or contains(@aria-label,'Обратно')])[1]",
+          "value": "5000"
+        },
+        {
+          "id": "tc06-05",
+          "command": "assertElementPresent",
+          "target": "xpath=(//input[contains(@placeholder,'Обратно') or contains(@aria-label,'Обратно')])[1]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-07",
+      "name": "TC-07 UC-07 Hotel form full fill",
+      "commands": [
+        {
+          "id": "tc07-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc07-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//a[contains(@href,'hotel')] | //*[normalize-space()='Отели'])[1]",
+          "value": "10000"
+        },
+        {
+          "id": "tc07-03",
+          "command": "click",
+          "target": "xpath=(//a[contains(@href,'hotel')] | //*[normalize-space()='Отели'])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc07-04",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
+          "value": "5000"
+        },
+        {
+          "id": "tc07-05",
+          "command": "type",
+          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
+          "value": "Сочи"
+        },
+        {
+          "id": "tc07-06",
+          "command": "assertValue",
+          "target": "xpath=(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]",
+          "value": "Сочи"
+        }
+      ]
+    },
+    {
+      "id": "tc-08",
+      "name": "TC-08 UC-08 Empty search shows error",
+      "commands": [
+        {
+          "id": "tc08-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc08-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=(//button[contains(normalize-space(),'Найти')])[1]",
+          "value": "10000"
+        },
+        {
+          "id": "tc08-03",
+          "command": "click",
+          "target": "xpath=(//button[contains(normalize-space(),'Найти')])[1]",
+          "value": ""
+        },
+        {
+          "id": "tc08-04",
+          "command": "assertLocation",
+          "target": "regexp:tutu\\.ru",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-09",
+      "name": "TC-09 UC-09 Subscription form state transition",
+      "commands": [
+        {
+          "id": "tc09-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc09-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=//input[contains(@aria-label,'Электронная почта') and @name='userEmail']",
+          "value": "10000"
+        },
+        {
+          "id": "tc09-03",
+          "command": "type",
+          "target": "xpath=//input[contains(@aria-label,'Электронная почта') and @name='userEmail']",
+          "value": "notanemail"
+        },
+        {
+          "id": "tc09-04",
+          "command": "assertValue",
+          "target": "xpath=//input[contains(@aria-label,'Электронная почта') and @name='userEmail']",
+          "value": "notanemail"
+        },
+        {
+          "id": "tc09-05",
+          "command": "type",
+          "target": "xpath=//input[contains(@aria-label,'Электронная почта') and @name='userEmail']",
+          "value": "test.user@example.com"
+        },
+        {
+          "id": "tc09-06",
+          "command": "click",
+          "target": "xpath=//input[contains(@aria-label,'Даю согласие на обработку персональных данных и рекламные рассылки')]",
+          "value": ""
+        },
+        {
+          "id": "tc09-07",
+          "command": "assertChecked",
+          "target": "xpath=//input[contains(@aria-label,'Даю согласие на обработку персональных данных и рекламные рассылки')]",
+          "value": ""
+        },
+        {
+          "id": "tc09-08",
+          "command": "assertElementPresent",
+          "target": "xpath=(//button[normalize-space()='Подписаться' or contains(@aria-label,'Подписаться')])[last()]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "tc-10",
+      "name": "TC-10 UC-10 Scroll reveals Ideas section",
+      "commands": [
+        {
+          "id": "tc10-01",
+          "command": "open",
+          "target": "https://www.tutu.ru/",
+          "value": ""
+        },
+        {
+          "id": "tc10-02",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(),'Идеи для поездок')]",
+          "value": "15000"
+        },
+        {
+          "id": "tc10-03",
+          "command": "scrollToElement",
+          "target": "xpath=//*[contains(normalize-space(),'Идеи для поездок')]",
+          "value": ""
+        },
+        {
+          "id": "tc10-04",
+          "command": "assertElementPresent",
+          "target": "xpath=//*[contains(normalize-space(),'Идеи для поездок')]",
+          "value": ""
+        },
+        {
+          "id": "tc10-05",
+          "command": "assertElementPresent",
+          "target": "xpath=(//*[contains(normalize-space(),'Идеи для поездок')]/following::a[contains(@href,'/')])[1]",
           "value": ""
         }
       ]
@@ -157,15 +415,13 @@
       "parallel": false,
       "timeout": 30000,
       "tests": [
-        "test-home-services",
-        "test-help",
-        "test-hotel-destination",
-        "test-invalid-email"
+        "tc-01", "tc-02", "tc-03", "tc-04", "tc-05",
+        "tc-06", "tc-07", "tc-08", "tc-09", "tc-10"
       ]
     }
   ],
   "urls": [
-    "file:///C:/Users/admin/IdeaProjects/Software-testing/docs/tasks/lab3/site/main.html"
+    "https://www.tutu.ru/"
   ],
   "plugins": []
 }

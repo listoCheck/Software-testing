@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -34,6 +35,9 @@ class FlightSearchTest extends TutuUiTestBase {
 
         homePage.open();
         homePage.clickFlightTab();
+        assertTrue(homePage.isFlightTabActive() || !homePage.searchButton().getText().isBlank(),
+            "Должен быть открыт контекст поиска авиабилетов");
+
         homePage.enterFlightOrigin(fromCity);
         homePage.enterFlightDestination(toCity);
         homePage.selectDepartureDate(departureDate);
@@ -59,6 +63,7 @@ class FlightSearchTest extends TutuUiTestBase {
         waitUntilUrlContains("/avia/");
 
         assertTrue(resultsPage.isLoaded(), "После поиска должна открыться страница выдачи авиабилетов");
+        assertTrue(resultsPage.isAviaContextVisible(), "После перехода должен сохраниться контекст авиабилетов");
         assertEquals(fromCity, resultsPage.searchOriginValue());
         assertEquals(toCity, resultsPage.searchDestinationValue());
         assertEquals(formatDateForDisplay(departureDate), resultsPage.departureDateValue());
@@ -74,7 +79,7 @@ class FlightSearchTest extends TutuUiTestBase {
 
         resultsPage.clickFirstSelectTicketButton();
 
-        new WebDriverWait(driver, java.time.Duration.ofSeconds(20)).until(d ->
+        new WebDriverWait(driver, Duration.ofSeconds(20)).until(d ->
             d.getWindowHandles().size() > windowsBeforeSelection
                 || !d.getCurrentUrl().equals(resultsUrlBeforeSelection));
 

@@ -11,6 +11,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -44,7 +45,7 @@ public abstract class TutuUiTestBase {
 
         driver.manage().window().setSize(new Dimension(1600, 1200));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
     }
 
     @AfterEach
@@ -59,11 +60,28 @@ public abstract class TutuUiTestBase {
             driver.get(BASE_URL);
         } catch (TimeoutException ignored) {
             // Live pages may keep loading long-tail resources; continue with current DOM.
+        } catch (WebDriverException e) {
+            // ERR_NAME_NOT_RESOLVED, ERR_CONNECTION_REFUSED, etc. — page may still be loaded as error page
         }
-        wait.until(driver -> {
-            Object readyState = ((JavascriptExecutor) driver).executeScript("return document.readyState;");
-            return "interactive".equals(readyState) || "complete".equals(readyState);
-        });
+        // Fail fast when Chrome ended up on a browser error/blank page
+        String currentUrl = driver.getCurrentUrl();
+        boolean isBlankOrError = currentUrl == null
+            || currentUrl.startsWith("chrome-error://")
+            || currentUrl.startsWith("data:")
+            || currentUrl.isEmpty();
+        if (isBlankOrError) {
+            throw new WebDriverException(
+                "Browser failed to load " + BASE_URL + " (current URL: " + currentUrl + ").\n" +
+                "Check: curl -Is --max-time 10 " + BASE_URL);
+        }
+        try {
+            wait.until(driver -> {
+                Object readyState = ((JavascriptExecutor) driver).executeScript("return document.readyState;");
+                return "interactive".equals(readyState) || "complete".equals(readyState);
+            });
+        } catch (TimeoutException ignored) {
+            // Page hasn't reached interactive state within timeout; proceed with current DOM.
+        }
         waitForAnyVisible(List.of(
             By.tagName("body"),
             By.xpath("//a[@href]"),
@@ -107,14 +125,18 @@ public abstract class TutuUiTestBase {
     public WebElement waitForAnyVisible(List<By> locators) {
         return wait.until(driver -> {
             for (By locator : locators) {
-                List<WebElement> elements = driver.findElements(locator);
-                for (WebElement element : elements) {
-                    try {
-                        if (element.isDisplayed()) {
-                            return element;
+                try {
+                    List<WebElement> elements = driver.findElements(locator);
+                    for (WebElement element : elements) {
+                        try {
+                            if (element.isDisplayed()) {
+                                return element;
+                            }
+                        } catch (WebDriverException ignored) {
+                            // covers StaleElementReferenceException and isDisplayed() failures
                         }
-                    } catch (StaleElementReferenceException ignored) {
                     }
+                } catch (WebDriverException ignored) {
                 }
             }
             return null;
@@ -139,6 +161,14 @@ public abstract class TutuUiTestBase {
         options.addArguments("--window-size=1600,1200");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--disable-gpu");
+        options.addArguments(
+            "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
         if (headless) {
             options.addArguments("--headless=new");
         }
@@ -152,6 +182,22 @@ public abstract class TutuUiTestBase {
             options.addArguments("-headless");
         }
         return new FirefoxDriver(options);
+    }
+
+    public boolean isElementInViewport(WebElement element) {
+        return Boolean.TRUE.equals(
+            ((JavascriptExecutor) driver).executeScript(
+                "var r=arguments[0].getBoundingClientRect();" +
+                "return r.bottom>0 && r.top<window.innerHeight;", element));
+    }
+
+    public void scrollToFraction(double fraction) {
+        ((JavascriptExecutor) driver).executeScript(
+            "window.scrollTo(0,document.body.scrollHeight*arguments[0]);", fraction);
+    }
+
+    public String currentUrl() {
+        return driver.getCurrentUrl();
     }
 
     private void dismissCookieBannerIfPresent() {
