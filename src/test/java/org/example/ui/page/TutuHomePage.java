@@ -473,7 +473,7 @@ public class TutuHomePage {
 
     public void setPassengersCount(int adults, int children, int infants) {
         setPassengerType("adult", "взросл", adults);
-        setPassengerType("child", "реб", children);
+        setPassengerType("child", "дет", children);
         setPassengerType("infant", "млад", infants);
     }
 
