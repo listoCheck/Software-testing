@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class TutuHelpPage {
-    private static final By HELP_LINK = By.xpath("(//a[contains(@href, '/2read/')])[1]");
+    private static final By HELP_LINK = By.xpath("(//a[contains(@href, '2read')])[1]");
 
     private final TutuUiTestBase base;
 

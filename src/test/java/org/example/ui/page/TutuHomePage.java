@@ -17,7 +17,7 @@ public class TutuHomePage {
     private static final String CONSENT_LABEL = "Даю согласие на обработку персональных данных и рекламные рассылки";
     private static final By IDEAS_HEADING = By.xpath(
         "//*[self::h1 or self::h2 or self::div or self::span][normalize-space()='Идеи для поездок']");
-    private static final By HELP_LINK = By.xpath("(//a[contains(@href, '/2read/')])[1]");
+    private static final By HELP_LINK = By.xpath("(//a[contains(@href, '2read')])[1]");
     private static final By DESTINATION_FIELD = By.xpath(
         "(//input[@data-ti='input' and @type='text' and not(@name='userEmail')])[1]");
     private static final By EMAIL_FIELD = By.xpath("//input[contains(@aria-label, 'Электронная почта') and @name='userEmail']");
