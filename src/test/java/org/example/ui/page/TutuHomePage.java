@@ -74,6 +74,7 @@ public class TutuHomePage {
     }
 
     public void enterHotelDestination(String destination) {
+        clickHotelsFormTab();
         WebElement field = base.waitPresent(DESTINATION_FIELD);
         base.scrollIntoView(field);
         field.click();
@@ -171,7 +172,7 @@ public class TutuHomePage {
             "contains(normalize-space(.), 'Найти')" +
         "])[1]");
     private static final By PASSENGER_SELECTOR = By.xpath(
-        "(//*[self::button or self::div or self::span][contains(normalize-space(.), 'Пассажир')])[1]");
+        "(//*[contains(@class,'passenger-selector') or @id='pax-btn'])[1]");
     private static final By PASSENGER_DIALOG = By.xpath(
         "(//*[@role='dialog' or contains(@class, 'passenger') or contains(@class, 'traveller')])[1]");
     private static final By APPLY_PASSENGERS_BUTTON = By.xpath(
@@ -330,13 +331,18 @@ public class TutuHomePage {
 
     public void clickFirstAvailableDayInDatepicker() {
         By availableDays = By.xpath(
-            "(//*[@data-date and not(contains(@class,'disabled')) and " +
+            "//*[@data-date and not(contains(@class,'disabled')) and " +
             "not(contains(@class,'past')) and not(contains(@class,'prev-month')) and " +
-            "not(contains(@class,'next-month'))])[3]");
+            "not(contains(@class,'next-month'))]");
         List<WebElement> days = base.findElements(availableDays);
-        if (!days.isEmpty()) {
-            base.scrollIntoView(days.get(0));
-            days.get(0).click();
+        for (WebElement day : days) {
+            try {
+                if (day.isDisplayed()) {
+                    base.scrollIntoView(day);
+                    day.click();
+                    return;
+                }
+            } catch (Exception ignored) {}
         }
     }
 
