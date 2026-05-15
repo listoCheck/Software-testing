@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Авиабилеты — Tutu.ru</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; padding: 16px; }
+.header { font-size: 22px; font-weight: bold; margin-bottom: 12px; }
+.search-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+.search-bar input { padding: 8px; border: 1px solid #ccc; font-size: 14px; }
+.ticket-card { border: 1px solid #ddd; padding: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.ticket-price { font-size: 18px; font-weight: bold; color: #c00; }
+.select-btn { padding: 10px 20px; background: #ff6600; color: #fff; border: none; cursor: pointer; text-decoration: none; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="header">Авиабилеты</div>
+<div class="search-bar">
+  <input type="text" id="r-origin" placeholder="Откуда" aria-label="Откуда"/>
+  <input type="text" id="r-dest" placeholder="Куда" aria-label="Куда"/>
+  <input type="text" id="r-date" placeholder="Когда" aria-label="Дата"/>
+  <button>Найти</button>
+</div>
+<div id="results">
+  <div class="ticket-card">
+    <div><b>Москва → Санкт-Петербург</b><br/>08:00 – 09:30</div>
+    <div class="ticket-price">от 3 500 ₽</div>
+    <a href="../booking/" class="select-btn">Выбрать билет</a>
+  </div>
+  <div class="ticket-card">
+    <div><b>Москва → Санкт-Петербург</b><br/>12:00 – 13:25</div>
+    <div class="ticket-price">от 4 200 ₽</div>
+    <button class="select-btn" onclick="window.location.href='../booking/'">Выбрать</button>
+  </div>
+  <div class="ticket-card">
+    <div><b>Москва → Санкт-Петербург</b><br/>18:30 – 19:55</div>
+    <div class="ticket-price">от 5 100 ₽</div>
+    <button class="select-btn" onclick="window.location.href='../booking/'">Купить</button>
+  </div>
+</div>
+<script>
+window.addEventListener('load', () => {
+  const from = sessionStorage.getItem('avia-from') || '';
+  const to = sessionStorage.getItem('avia-to') || '';
+  const date = sessionStorage.getItem('avia-date') || '';
+  document.getElementById('r-origin').value = from;
+  document.getElementById('r-dest').value = to;
+  document.getElementById('r-date').value = date;
+});
+</script>
+</body>
+</html>
